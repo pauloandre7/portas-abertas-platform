@@ -1,0 +1,29 @@
+{
+  "name": "portas-abertas-platform",
+  "version": "1.0.0",
+  "description": "Este projeto está sendo desenvolvido para a disciplina \"ES46F/ES61 - Oficina de Integração 1\" da UTFPR. O objetivo é criar uma solução digital que centralize, organize e facilite o acesso a informações sobre instituições e serviços voltados à neurodiversidade. A plataforma atua como um portfólio de instituições dedicadas ao atendimento de pessoas neurodivergentes e com deficiência (PCDs).",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "ts-node-dev --transpile-only --ignore-watch node_modules src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pauloandre7/portas-abertas-platform.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/pauloandre7/portas-abertas-platform/issues"
+  },
+  "homepage": "https://github.com/pauloandre7/portas-abertas-platform#readme",
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^6.0.3"
+  }
+}

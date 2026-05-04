@@ -1,0 +1,31 @@
+services:
+  # Container 1 do postgres, inicia apenas o servidor
+  postgres:
+    image: postgres:17-alpine
+    container_name: portas_abertas_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "${DB_PORT}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # COntainer 2 do pgadmin para visualizar o banco
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: portas_abertas_pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+
+# declara o volume persistente para poder usar dentro do container postgres
+volumes:
+  postgres_data:
