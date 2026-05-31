@@ -12,6 +12,11 @@
     "module": "nodenext",
     "target": "es2022",
     "types": [],
+    "moduleResolution": "nodenext",
+    // permitirá uso de decoradores de classe
+    "experimentalDecorators": true,
+    // permitirá injeção de dependência
+    "emitDecoratorMetadata": true,
     // For nodejs:
     // "lib": ["esnext"],
     // "types": ["node"],
