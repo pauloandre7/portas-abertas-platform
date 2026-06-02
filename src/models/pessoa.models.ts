@@ -23,7 +23,7 @@ export class Pessoa {
         if (!(cpfTratado.length === 11)) return false;
 
         // garantir que só tem números
-        for(let i: number = 1; 1 < cpfTratado.length; i++){
+        for(let i: number = 1; i < cpfTratado.length; i++){
             
             let cpfNumber : number = parseInt(cpfTratado.substring(i-1, i));
 

@@ -21,7 +21,9 @@ export class AuthService implements IAuthService {
         if (!usuario) {
             throw new Error("Usuário não encontrado");
         }
-
+        
+        // Todo: Essa verificação aqui não vai funcionar. Do front vem string, do banco vem hash...
+        // Tem que usar alguma lib para esse hash aqui.
         if (usuario.senhaHash !== senha) {
             throw new Error("Senha inválida");
         }
@@ -36,7 +38,7 @@ export class AuthService implements IAuthService {
             usuario.cpf,
             usuario.email,
             token,
-            usuario.id,
+            usuario.id !== undefined ? usuario.id.toString() : undefined,
             usuario.uuid,
             usuario.endereco
         );
