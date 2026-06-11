@@ -32,7 +32,7 @@ Com o Docker aberto na sua máquina, rode o comando abaixo para iniciar o contai
 docker-compose up -d
 ```
 
-**5. Semeie o Banco de Dados (Seed)**<br>
+**5. Semeie o Banco de Dados - Essa etapa ainda não foi implementada ainda (Seed)**<br>
 Com o banco rodando, precisamos criar as tabelas e inserir os dados iniciais de teste (como os administradores). Para isso, execute:
 ```bash
 npm run seed
