@@ -1,6 +1,6 @@
 import { Endereco } from './endereco.model.js';
 import { Contato } from './contato.models.js';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 // funcinoa como um enum. O "as const" impede alterações
 const Status = {
@@ -12,7 +12,7 @@ const Status = {
 @Entity()
 export class Instituicao {   
     
-    @Column({type: "long"})
+    @PrimaryGeneratedColumn("increment")
     public readonly id?: bigint | undefined;
 
     @Column({type: "varchar"})
@@ -21,7 +21,7 @@ export class Instituicao {
     @Column({type: "varchar"})
     public nome?: string;
 
-    @Column({type: "array"})
+    @Column({type: "text", array: true})
     public servicos?: string[];
 
     @Column({type: "varchar"})

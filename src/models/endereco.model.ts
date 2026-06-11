@@ -8,7 +8,7 @@ export class Endereco {
     @Column({type: "varchar"})
     public bairro: string;
 
-    @Column({type: "long"})
+    @Column({type: "int"})
     public numero: number;
 
     @Column({type: "varchar"})
