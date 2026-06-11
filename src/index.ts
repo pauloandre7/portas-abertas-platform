@@ -8,6 +8,9 @@ import { JwtTokenProvider } from './utils/jwt-token-provider.js';
 import { Admin } from './models/admin.models.js';
 
 import { AppDataSource } from "./config/database.js";
+import { AdminRepository } from "./repositories/admin.repositories.js";
+import { BaseSeed } from "./seeds/iseedBase.seeds.js";
+import { AdminSeed } from "./seeds/admin.seeds.js";
 
 async function startServer() {
     try {
@@ -19,23 +22,18 @@ async function startServer() {
         const app = express();
         app.use(express.json());
 
-        // Stub provisório pro método findByEmail
-        const adminRepository: IAdminRepository = {
-            create: async () => { throw new Error('TODO'); },
-            delete: async () => { throw new Error('TODO'); },
-            update: async () => { throw new Error('TODO'); },
-            findById: async () => { throw new Error('TODO'); },
-            findAll: async () => { throw new Error('TODO'); },
-            findByEmail: async () => {
-                return new Admin("Admin", "52998224725", "admin@gmail.com", "admin", 1n, "UU1212", undefined);
-            }
-        };
-
+        
         // Instanciação e injeção de dependências
         const tokenProvider = new JwtTokenProvider();
+        const adminRepository = new AdminRepository();
         const authService = new AuthService(adminRepository, tokenProvider);
         const authHandler = new AuthHandler(authService);
         const authRouter = express.Router();
+        // Cria o seeder de admin
+        const adminSeeder = new AdminSeed(adminRepository);
+
+        // Popula o banco com o objeto definido no seeder
+        adminSeeder.run(AppDataSource);
 
         new AuthRoutes(authRouter, authHandler);
         app.use('/auth', authRouter);
