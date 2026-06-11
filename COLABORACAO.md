@@ -20,7 +20,7 @@ Na raiz do projeto, crie um arquivo chamado `.env`. Certifique-se de preencher a
 ```env
 NODE_ENV=development
 DB_HOST=localhost
-DB_PORT=5432
+DB_PORT=5433
 DB_USER=seu_usuario
 DB_PASSWORD=sua_senha
 DB_NAME=portas_abertas_db
