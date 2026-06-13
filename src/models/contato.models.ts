@@ -1,11 +1,34 @@
+import { Column } from "typeorm";
+
 export class Contato{
 
+    @Column({type: "varchar"})
+    public telefone: string;
+
+    @Column({type: "varchar"})
+    public email: string;
+    
+    @Column({type: "varchar"})
+    public instagram?: string | undefined;
+
+    @Column({type: "varchar"})
+    public facebook?: string | undefined;
+
+    @Column({type: "varchar"})
+    public site?: string | undefined;
+
     constructor(
-        public telefone: string,
-        public email: string,
-        // abaixo, usei o ? ao final do atributo para definir a possibilidade de ser undefined
-        public instagram?: string | undefined,
-        public facebook?: string | undefined,
-        public site?: string | undefined,
-    ){}
+        telefone: string,
+        email: string,
+        instagram: string | undefined,
+        facebook: string | undefined,
+        site: string | undefined,
+    ){
+
+        this.telefone = telefone;
+        this.email = email;
+        this.instagram = instagram;
+        this.facebook = facebook;
+        this.site = site;
+    }
 }

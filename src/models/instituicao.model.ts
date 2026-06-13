@@ -1,5 +1,6 @@
-import type { Endereco } from './endereco.model.js';
-import type { Contato } from './contato.models.js';
+import { Endereco } from './endereco.model.js';
+import { Contato } from './contato.models.js';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 // funcinoa como um enum. O "as const" impede alterações
 const Status = {
@@ -8,19 +9,55 @@ const Status = {
     PENDENTE: "pendente"
 } as const;
 
+@Entity()
 export class Instituicao {   
     
-    constructor(
-        public nome: string,
-        public servicos: string[],
-        public contato: Contato,
-        public endereco: Endereco,
-        public cnpj?: string | undefined,
-        public readonly id?: bigint | undefined,
-        public readonly uuid?: string | undefined        
-    ){ 
+    @PrimaryGeneratedColumn("increment")
+    public readonly id?: bigint | undefined;
 
-        if(!(this.cnpj === undefined)) this.validaCnpj(this.cnpj);
+    @Column({type: "varchar"})
+    public readonly uuid;
+    
+    @Column({type: "varchar"})
+    public nome?: string;
+
+    @Column({type: "text", array: true})
+    public servicos?: string[];
+
+    @Column({type: "varchar"})
+    public cnpj?: string | undefined;
+    
+    @Column(() => Contato)
+    public contato?: Contato;
+
+    @Column(() => Endereco)
+    public endereco?: Endereco;
+
+    constructor(
+        nome?: string,
+        servicos?: string[],
+        contato?: Contato,
+        endereco?: Endereco,
+        cnpj?: string | undefined,
+        id?: bigint | undefined,
+        uuid?: string | undefined        
+    ){ 
+        if(nome && servicos && contato && endereco){
+            
+            if(!(cnpj === undefined)) {
+
+                if(this.validaCnpj(cnpj)) throw new Error("Não é possível criar Instituicao: CNPJ inválido");
+            }
+
+            this.nome = nome;
+            this.servicos = servicos;
+            this.contato = contato;
+            this.endereco = endereco;
+            this.cnpj = cnpj;
+            this.id = id;
+            this.uuid = uuid;
+
+        }
     }
 
     private validaCnpj(cnpj: string): boolean {
