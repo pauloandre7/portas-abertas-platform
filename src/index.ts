@@ -29,12 +29,8 @@ async function startServer() {
         const authService = new AuthService(adminRepository, tokenProvider);
         const authHandler = new AuthHandler(authService);
         const authRouter = express.Router();
-        // Cria o seeder de admin
-        const adminSeeder = new AdminSeed(adminRepository);
 
-        // Popula o banco com o objeto definido no seeder
-        adminSeeder.run(AppDataSource);
-
+        // inicializa o authRouter injetando de authHandler no framework
         new AuthRoutes(authRouter, authHandler);
         app.use('/auth', authRouter);
 
