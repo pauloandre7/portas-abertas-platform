@@ -8,13 +8,13 @@ export class Contato{
     @Column({type: "varchar"})
     public email: string;
     
-    @Column({type: "varchar"})
+    @Column({type: "varchar", nullable: true})
     public instagram?: string | undefined;
 
-    @Column({type: "varchar"})
+    @Column({type: "varchar", nullable: true})
     public facebook?: string | undefined;
 
-    @Column({type: "varchar"})
+    @Column({type: "varchar", nullable: true})
     public site?: string | undefined;
 
     constructor(
