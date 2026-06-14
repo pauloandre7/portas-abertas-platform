@@ -13,9 +13,9 @@ export class InstituicaoRepository implements IInstituicaoRepository {
         this.repository = AppDataSource.getRepository(Instituicao);
     }
 
-    async delete(instituicao: Instituicao): Promise<boolean> {
+    async delete(uuid: string): Promise<boolean> {
         try{
-            await this.repository.delete({uuid: instituicao.uuid})    
+            await this.repository.delete({uuid: uuid})    
             return true;
         } catch( error ){
             throw new Error("Não foi possível excluir Instituicao: "+ error);
@@ -46,6 +46,11 @@ export class InstituicaoRepository implements IInstituicaoRepository {
     async findById(id: bigint): Promise<Instituicao | null> {
         
         return await this.repository.findOneBy({id: id});
+    }
+
+    async findByUuid(uuid: string): Promise<Instituicao | null> {
+
+        return await this.repository.findOneBy({uuid: uuid});
     }
 
     async findAll(): Promise<Instituicao[] | null> {

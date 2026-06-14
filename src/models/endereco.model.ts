@@ -9,7 +9,7 @@ export class Endereco {
     public bairro: string;
 
     @Column({type: "int"})
-    public numero: number;
+    public numero: bigint;
 
     @Column({type: "varchar"})
     public cep: string;
@@ -26,7 +26,7 @@ export class Endereco {
     constructor(
         logradouro: string,
         bairro: string,
-        numero: number,
+        numero: bigint,
         cep: string,
         cidade: string,
         estado: string,

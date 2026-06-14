@@ -19,7 +19,7 @@ export class AdminSeed extends BaseSeed {
         const endereco: Endereco = new Endereco(
             "Avenida Principal",
             "Centro",
-            123,
+            BigInt(123),
             "86300000",
             "Cornélio",
             "PR",

@@ -4,6 +4,7 @@ import type { InstituicaoRepository } from "../repositories/instituicao.reposito
 import { Endereco } from "../models/endereco.model.js";
 import { Instituicao } from "../models/instituicao.model.js";
 import { Contato } from "../models/contato.models.js";
+import { UuidProvider } from "../utils/uuid-provider.utils.js";
 
 export class InstituicaoSeeder implements BaseSeed{
 
@@ -18,11 +19,11 @@ export class InstituicaoSeeder implements BaseSeed{
         this.repository.limparTabela();
         
         const endereco: Endereco = new Endereco(
-            "Avenida Principal", "Centro", 123, 
+            "Avenida Principal", "Centro", BigInt(123), 
             "86300000", "Cornélio Procópio", "PR", "Brasil"
         );
         const endereco2: Endereco = new Endereco(
-            "Avenida Principal", "Centro", 123, 
+            "Avenida Principal", "Centro", BigInt(321), 
             "86300000", "Londrina", "PR", "Brasil"
         );
 
@@ -34,18 +35,18 @@ export class InstituicaoSeeder implements BaseSeed{
 
         const instituicao: Instituicao = new Instituicao(
             "Portas Abertas", ["Informação", "Suporte"],
-            contato, endereco, "44555666000181", undefined,
-            "uuid-padrao-010"
+            contato, endereco, "44555666000181", "Descrição Descritiva", 
+            undefined, UuidProvider.gerarUuid()
         );
         const instituicao2: Instituicao = new Instituicao(
             "Psi. Luanna", ["Terapia", "Avaliação Clínica"],
-            contato, endereco, "12345678000195", undefined,
-            "uuid-padrao-011"
+            contato, endereco, "12345678000195", "Descrição Descritiva", 
+            undefined, UuidProvider.gerarUuid()
         );
         const instituicao3: Instituicao = new Instituicao(
             "Psi. Isabella", ["Terapia", "Avaliação Clínica", "Suporte de Desenvolvimento"],
-            contato, endereco2, "98765432000198", undefined,
-            "uuid-padrao-012"
+            contato, endereco2, "98765432000198", "Descrição Descritiva", 
+            undefined, UuidProvider.gerarUuid()
         );
 
         if(await this.repository.create(instituicao)) console.log("\n>> Instituição 1 criada com sucesso.");
