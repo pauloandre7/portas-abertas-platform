@@ -11,6 +11,10 @@ import { AppDataSource } from "./config/database.js";
 import { AdminRepository } from "./repositories/admin.repositories.js";
 import { BaseSeed } from "./seeds/iseedBase.seeds.js";
 import { AdminSeed } from "./seeds/admin.seeds.js";
+import { InstituicaoService } from "./services/instituicao.services.js";
+import { InstituicaoRepository } from "./repositories/instituicao.repositories.js";
+import { InstituicaoHandler } from "./handlers/instituicao.handlers.js";
+import { InstituicaoRoutes } from "./routes/instituicao.routes.js";
 
 async function startServer() {
     try {
@@ -24,15 +28,22 @@ async function startServer() {
 
         
         // Instanciação e injeção de dependências
-        const tokenProvider = new JwtTokenProvider();
-        const adminRepository = new AdminRepository();
-        const authService = new AuthService(adminRepository, tokenProvider);
-        const authHandler = new AuthHandler(authService);
-        const authRouter = express.Router();
+        const tokenProvider         = new JwtTokenProvider();
+        const adminRepository       = new AdminRepository();
+        const instituicaoRepository = new InstituicaoRepository();
+        const authService           = new AuthService(adminRepository, tokenProvider);
+        const instituicaoService    = new InstituicaoService(instituicaoRepository);
+        const instituicaoHandler    = new InstituicaoHandler(instituicaoService);
+        const authHandler           = new AuthHandler(authService);
+        
+        // inicializa as rotas injetando os handlers no framework
+        const authRouter            = express.Router();
+        const instituicaoRouter     = express.Router();
 
-        // inicializa o authRouter injetando de authHandler no framework
         new AuthRoutes(authRouter, authHandler);
         app.use('/auth', authRouter);
+        new InstituicaoRoutes(instituicaoRouter, instituicaoHandler);
+        app.use('/', instituicaoRouter); // endpoint principal pro roteador de instituicao
 
         // Endpoint pra ver se está no ar
         app.get('/respirando', (_req, res) => {
