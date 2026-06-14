@@ -21,6 +21,7 @@ export class AdminSeed extends BaseSeed {
             "Centro",
             123,
             "86300000",
+            "Cornélio",
             "PR",
             "Brasil"
         );
