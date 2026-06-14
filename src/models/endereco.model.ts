@@ -14,6 +14,9 @@ export class Endereco {
     @Column({type: "varchar"})
     public cep: string;
 
+    @Column({type: "varchar"})
+    public cidade: string;
+
     @Column({type: "varchar", length: 2})
     public estado: string;
 
@@ -25,6 +28,7 @@ export class Endereco {
         bairro: string,
         numero: number,
         cep: string,
+        cidade: string,
         estado: string,
         pais: string,
     ){
@@ -33,6 +37,7 @@ export class Endereco {
         this.bairro =  bairro;
         this.numero =  numero;
         this.cep =  cep;
+        this.cidade = cidade;
         this.estado =  estado;
         this.pais =  pais;
 

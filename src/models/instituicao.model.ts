@@ -24,7 +24,7 @@ export class Instituicao {
     @Column({type: "text", array: true})
     public servicos?: string[];
 
-    @Column({type: "varchar"})
+    @Column({type: "varchar", nullable: true})
     public cnpj?: string | undefined;
     
     @Column(() => Contato)
