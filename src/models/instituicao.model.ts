@@ -1,13 +1,8 @@
 import { Endereco } from './endereco.model.js';
 import { Contato } from './contato.models.js';
 import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { Status, type StatusInstituicao } from './instituicao-status-enum.models.js';
 
-// funcinoa como um enum. O "as const" impede alterações
-const Status = {
-    ATIVO: "ativo",
-    INATIVO: "inativo",
-    PENDENTE: "pendente"
-} as const;
 
 @Entity()
 export class Instituicao {   
@@ -29,6 +24,9 @@ export class Instituicao {
 
     @Column({type: "text", nullable: true})
     public descricao?: string;
+
+    @Column({type: "enum", enum: Object.values(Status), default: Status.PENDENTE, nullable: false})
+    public status?:  StatusInstituicao;
     
     @Column(() => Contato)
     public contato?: Contato;
@@ -42,11 +40,12 @@ export class Instituicao {
         contato?: Contato,
         endereco?: Endereco,
         cnpj?: string | undefined,
-        descricao?: string | undefined, 
+        descricao?: string | undefined,
+        status?: StatusInstituicao,
         id?: bigint | undefined,
         uuid?: string | undefined        
     ){ 
-        if(nome && servicos && contato && endereco){
+        if(nome && servicos && contato && endereco && status){
             
             if(!(cnpj === undefined)) {
 
@@ -59,6 +58,7 @@ export class Instituicao {
             this.endereco = endereco;
             this.cnpj = cnpj;
             this.descricao = descricao;
+            this.status = status;
             this.id = id;
             this.uuid = uuid;
 
