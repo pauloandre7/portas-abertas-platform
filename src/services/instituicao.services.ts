@@ -1,11 +1,11 @@
 import type { InstituicaoCreateRequest } from "../dtos/instituicao-create-request.dtos.js";
 import type { InstituicaoDeleteRequest } from "../dtos/instituicao-delete-request.dtos.js";
 import { InstituicaoRequest } from "../dtos/instituicao-request.dtos.js";
-import { Endereco } from "../models/endereco.model.js";
 import { Instituicao } from "../models/instituicao.model.js";
 import type { IInstituicaoRepository } from "../repositories/iinstituicao.repositories.js";
 import type { IInstituicaoService } from "./iinstituicao.services.js";
-import crypto from "node:crypto";
+import { UuidProvider } from "../utils/uuid-provider.utils.js";
+
 
 
 export class InstituicaoService implements IInstituicaoService {
@@ -22,8 +22,9 @@ export class InstituicaoService implements IInstituicaoService {
             cadastrarRequest.endereco as any,
             cadastrarRequest.cnpj,
             cadastrarRequest.descricao,
+            cadastrarRequest.status,
             undefined,
-            crypto.randomUUID()
+            UuidProvider.gerarUuid()
         );
         
         const salvou = await this.repository.create(instituicao);
@@ -37,6 +38,7 @@ export class InstituicaoService implements IInstituicaoService {
             instituicao.nome!,
             instituicao.cnpj!,
             instituicao.descricao!,
+            instituicao.status!,
             instituicao.servicos!,
             instituicao.contato!,
             instituicao.endereco!
@@ -60,6 +62,7 @@ export class InstituicaoService implements IInstituicaoService {
         // null do front, o operador ?? vai utilizar o valor original ao invés do "nada"
         instituicaoOriginal.nome = updateRequest.nome ?? instituicaoOriginal.nome;
         instituicaoOriginal.descricao = updateRequest.descricao ?? instituicaoOriginal.descricao;
+        instituicaoOriginal.status = updateRequest.status ?? instituicaoOriginal.status;
         instituicaoOriginal.servicos = updateRequest.servicos ?? instituicaoOriginal.servicos;
         instituicaoOriginal.contato = updateRequest.contato ?? instituicaoOriginal.contato;
         instituicaoOriginal.endereco = updateRequest.endereco ?? instituicaoOriginal.endereco;
@@ -80,7 +83,8 @@ export class InstituicaoService implements IInstituicaoService {
             instituicaoOriginal.uuid, 
             instituicaoOriginal.nome,
             instituicaoOriginal.cnpj, 
-            instituicaoOriginal.descricao, 
+            instituicaoOriginal.descricao,
+            instituicaoOriginal.status, 
             instituicaoOriginal.servicos,
             instituicaoOriginal.contato, 
             instituicaoOriginal.endereco
