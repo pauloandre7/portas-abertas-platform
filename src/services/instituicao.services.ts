@@ -5,6 +5,7 @@ import { Endereco } from "../models/endereco.model.js";
 import { Instituicao } from "../models/instituicao.model.js";
 import type { IInstituicaoRepository } from "../repositories/iinstituicao.repositories.js";
 import type { IInstituicaoService } from "./iinstituicao.services.js";
+import crypto from "node:crypto";
 
 
 export class InstituicaoService implements IInstituicaoService {
@@ -13,8 +14,33 @@ export class InstituicaoService implements IInstituicaoService {
         public repository: IInstituicaoRepository
     ){ }
 
-    cadastrarInstituicao(cadastrarRequest: InstituicaoCreateRequest): Promise<InstituicaoRequest> {
-        throw new Error("Sera implementado em outra feature.");
+    async cadastrarInstituicao(cadastrarRequest: InstituicaoCreateRequest): Promise<InstituicaoRequest> {
+        const instituicao = new Instituicao(
+            cadastrarRequest.nome,
+            cadastrarRequest.servicos,
+            cadastrarRequest.contato as any,
+            cadastrarRequest.endereco as any,
+            cadastrarRequest.cnpj,
+            cadastrarRequest.descricao,
+            undefined,
+            crypto.randomUUID()
+        );
+        
+        const salvou = await this.repository.create(instituicao);
+
+        if (!salvou) {
+            throw new Error("Não foi possível cadastrar a instituição.");
+        }
+
+        return new InstituicaoRequest(
+            instituicao.uuid!,
+            instituicao.nome!,
+            instituicao.cnpj!,
+            instituicao.descricao!,
+            instituicao.servicos!,
+            instituicao.contato!,
+            instituicao.endereco!
+        );
     }
     
     
@@ -50,7 +76,6 @@ export class InstituicaoService implements IInstituicaoService {
             throw new Error("Falha ao salvar as alterações da Instituição.");
         }
 
-
         return new InstituicaoRequest(
             instituicaoOriginal.uuid, 
             instituicaoOriginal.nome,
@@ -62,10 +87,21 @@ export class InstituicaoService implements IInstituicaoService {
         );
     }
 
+    async excluirInstituicao(
+        deleteRequest: InstituicaoDeleteRequest
+    ): Promise<boolean> {
 
-    excluirInstituicao(deleteRequest: InstituicaoDeleteRequest): Promise<boolean> {
-        throw new Error("Sera implementado em outra feature.");
+        const instituicao = await this.repository.findByUuid(
+            deleteRequest.uuid
+        );
+
+        if (!instituicao) {
+            throw new Error("Instituição não encontrada.");
+        }
+
+        return await this.repository.delete(deleteRequest.uuid);
     }
+
     listarTodasInstituicoes(): Promise<InstituicaoRequest[]> {
         throw new Error("Sera implementado em outra feature.");
     }
@@ -78,6 +114,4 @@ export class InstituicaoService implements IInstituicaoService {
     buscarPorNome(nome: string): Promise<InstituicaoRequest> {
         throw new Error("Sera implementado em outra feature.");
     }
-
-
 }

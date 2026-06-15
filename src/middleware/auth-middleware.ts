@@ -1,16 +1,15 @@
-import type { Request, Response, NextFunction } from 'express';
+import type { Request, Response, NextFunction, RequestHandler } from 'express';
 import jwt from 'jsonwebtoken';
-import { error } from 'node:console';
 
-// A interface abaio identifica o que há no payload (definido na geração do token)
+// A interface abaixo identifica o que há no payload (definido na geração do token)
 export interface CustomRequest extends Request {
     usuarioUuid: string;
     email: string;
 }
 
-export const authMiddleware = (req: CustomRequest, res: Response, next: NextFunction): void => {
-    
-    const authHeader = req.headers.authorization;
+export const authMiddleware: RequestHandler = (req, res, next) => {
+    const customReq = req as CustomRequest;
+    const authHeader = customReq.headers.authorization;
 
     if (!authHeader) {
         res.status(401).json({ error: "Acesso negado. Token não fornecido." });
@@ -33,15 +32,15 @@ export const authMiddleware = (req: CustomRequest, res: Response, next: NextFunc
         
         const secret = process.env.JWT_SECRET;
         
-        if(token == undefined || secret == undefined) throw error ("Erro ao validar token");
+        if(token == undefined || secret == undefined) throw new Error ("Erro ao validar token");
         
         // O verify dispara um erro automaticamente se o token for falso ou se estiver expirado
         // Decodificamos e forçamos a tipagem do que esperamos que tenha lá dentro
-        const decodificado = jwt.verify(token, secret) as unknown as { uuid: string, email: string };
+        const decodificado = jwt.verify(token, secret) as unknown as { usuarioUuid: string, email: string };
 
         // Injeta o ID do usuário na requisição
-        req.usuarioUuid = decodificado.uuid;
-
+        customReq.usuarioUuid = decodificado.usuarioUuid;
+        customReq.email = decodificado.email;
         // Se for válido, avisa o express pra seguir
         return next();
 

@@ -1,6 +1,8 @@
 import { response } from "express";
 import { InstituicaoRequest } from "../dtos/instituicao-request.dtos.js";
 import type { IInstituicaoService } from "../services/iinstituicao.services.js";
+import { InstituicaoCreateRequest } from "../dtos/instituicao-create-request.dtos.js";
+import { InstituicaoDeleteRequest } from "../dtos/instituicao-delete-request.dtos.js";
 
 export class InstituicaoHandler {
 
@@ -8,6 +10,22 @@ export class InstituicaoHandler {
         public service: IInstituicaoService
     ){}
 
+    public cadastrar(req: any, res: any){
+
+        const request : InstituicaoCreateRequest = req.body;
+
+        this.service.cadastrarInstituicao(request)
+        .then(response => {
+
+            res.status(201).json(response);
+
+        }).catch(error => {
+
+            res.status(400).json({
+                error: error.message
+            });
+        });
+    }
 
     public modificar(req: any, res: any){
         
@@ -29,4 +47,26 @@ export class InstituicaoHandler {
         }
         
     }
+
+    public excluir(req: any, res: any){
+
+        const request = new InstituicaoDeleteRequest(
+            req.params.uuid
+        );
+
+        this.service.excluirInstituicao(request)
+        .then(() => {
+
+            res.status(200).json({
+                mensagem: "Instituição excluída com sucesso."
+            });
+
+        }).catch(error => {
+
+            res.status(400).json({
+                error: error.message
+            });
+        });
+    }
+
 }

@@ -1,5 +1,6 @@
 import type { Router } from "express";
 import type { InstituicaoHandler } from "../handlers/instituicao.handlers.js";
+import { authMiddleware } from "../middleware/auth-middleware.js";
 
 export class InstituicaoRoutes {
 
@@ -13,13 +14,23 @@ export class InstituicaoRoutes {
     }
     
     
-        private initializeRoutes(): void{
+    private initializeRoutes(): void{
+        this.router.post(
+            '/instituicao',
+            authMiddleware,
+            (req, res) => this.handler.cadastrar(req, res)
+        );
 
-            // Por enquanto só tem essa rota válida
-            this.router.put(
-                '/instituicao',
-                
-                (req, res) => this.handler.modificar(req, res)
-            );
-        }
+        this.router.put(
+            '/instituicao',
+            authMiddleware,
+            (req, res) => this.handler.modificar(req, res)
+        );
+
+        this.router.delete(
+            '/instituicao/:uuid',
+            authMiddleware,
+            (req, res) => this.handler.excluir(req, res)
+        );
+    }
 }
