@@ -5,6 +5,7 @@ import { Endereco } from "../models/endereco.model.js";
 import { Instituicao } from "../models/instituicao.model.js";
 import { Contato } from "../models/contato.models.js";
 import { UuidProvider } from "../utils/uuid-provider.utils.js";
+import { Status} from '../models/instituicao-status-enum.models.js';
 
 export class InstituicaoSeeder implements BaseSeed{
 
@@ -35,18 +36,18 @@ export class InstituicaoSeeder implements BaseSeed{
 
         const instituicao: Instituicao = new Instituicao(
             "Portas Abertas", ["Informação", "Suporte"],
-            contato, endereco, "44555666000181", "Descrição Descritiva", 
-            undefined, UuidProvider.gerarUuid()
+            contato, endereco, "44555666000181", "Descrição Descritiva",
+            Status.ATIVO, undefined, UuidProvider.gerarUuid()
         );
         const instituicao2: Instituicao = new Instituicao(
             "Psi. Luanna", ["Terapia", "Avaliação Clínica"],
-            contato, endereco, "12345678000195", "Descrição Descritiva", 
-            undefined, UuidProvider.gerarUuid()
+            contato, endereco, "12345678000195", "Descrição Descritiva",
+            Status.ATIVO, undefined, UuidProvider.gerarUuid()
         );
         const instituicao3: Instituicao = new Instituicao(
             "Psi. Isabella", ["Terapia", "Avaliação Clínica", "Suporte de Desenvolvimento"],
             contato, endereco2, "98765432000198", "Descrição Descritiva", 
-            undefined, UuidProvider.gerarUuid()
+            Status.PENDENTE, undefined, UuidProvider.gerarUuid()
         );
 
         if(await this.repository.create(instituicao)) console.log("\n>> Instituição 1 criada com sucesso.");
