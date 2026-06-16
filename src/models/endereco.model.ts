@@ -9,10 +9,13 @@ export class Endereco {
     public bairro: string;
 
     @Column({type: "int"})
-    public numero: number;
+    public numero: bigint;
 
     @Column({type: "varchar"})
     public cep: string;
+
+    @Column({type: "varchar"})
+    public cidade: string;
 
     @Column({type: "varchar", length: 2})
     public estado: string;
@@ -23,8 +26,9 @@ export class Endereco {
     constructor(
         logradouro: string,
         bairro: string,
-        numero: number,
+        numero: bigint,
         cep: string,
+        cidade: string,
         estado: string,
         pais: string,
     ){
@@ -33,6 +37,7 @@ export class Endereco {
         this.bairro =  bairro;
         this.numero =  numero;
         this.cep =  cep;
+        this.cidade = cidade;
         this.estado =  estado;
         this.pais =  pais;
 

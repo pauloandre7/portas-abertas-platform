@@ -18,7 +18,7 @@ export class AuthService implements IAuthService {
         const usuario =
             await this.adminRepository.findByEmail(email);
 
-        if (!usuario) {
+        if (!usuario || usuario.nome == undefined || usuario.cpf == undefined || usuario?.email == undefined) {
             throw new Error("Usuário não encontrado");
         }
         

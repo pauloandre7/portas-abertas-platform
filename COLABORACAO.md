@@ -29,10 +29,18 @@ DB_NAME=portas_abertas_db
 **4. Suba o Banco de Dados (Docker)**<br>
 Com o Docker aberto na sua máquina, rode o comando abaixo para iniciar o container do PostgreSQL e do pgAdmin em segundo plano:
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
-**5. Semeie o Banco de Dados - Essa etapa ainda não foi implementada ainda (Seed)**<br>
+**EXTRA: Para limpar o banco de dados e iniciar um novo do zero**<br>
+Caso queira limpar o banco de dados salvo na sua máquina e iniciar um novo com o docker compose up, basta usar:
+```bash
+docker compose down -v
+```
+O comando acima irá apagar os containers e os dados que foram salvos no seu computador.
+<br><br>
+
+**5. Semeie o Banco de Dados**<br>
 Com o banco rodando, precisamos criar as tabelas e inserir os dados iniciais de teste (como os administradores). Para isso, execute:
 ```bash
 npm run seed

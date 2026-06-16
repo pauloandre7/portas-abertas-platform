@@ -30,25 +30,40 @@ export class AdminRepository implements IAdminRepository{
 
     }
 
-    delete(id: number): Promise<boolean> {
-        throw new Error("Método a ser implementado em sprints futuras.");
+    async delete(admin : Admin): Promise<boolean> {
+        
+        try{
+            await this.repository.delete({id: admin.id});
+            return true;
+        } catch (error) {
+            throw new Error("Não foi possível excluir o admin: "+ error);
+        }
     }
 
-    update(admin: Admin): Promise<boolean> {
-        throw new Error("Método a ser implementado em sprints futuras.");
+    async update(admin: Admin): Promise<boolean> {
+        
+        try{
+            await this.repository.update({id: admin.id}, admin);
+            return true;
+
+        } catch ( error ){
+            throw new Error("Não foi possível atualizar o admin: "+ error);
+        }
     }
 
-    findById(id: number): Promise<Admin> {
-        throw new Error("Método a ser implementado em sprints futuras.");
+    async findById(id: bigint): Promise<Admin | null> {
+        
+        return await this.repository.findOneBy({id: id});
     }
 
-    findAll(): Promise<Admin[]> {
-        throw new Error("Método a ser implementado em sprints futuras.");
+    async findAll(): Promise<Admin[]> {
+        
+        return await this.repository.find();
     }
 
 
     async findByEmail(email: string): Promise<Admin | null> {
-        // TODO: testar esse método após implementação da seed
+
         return await this.repository.findOneBy({email});
     }
 

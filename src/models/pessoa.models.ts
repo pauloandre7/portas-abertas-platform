@@ -6,7 +6,7 @@ export class Pessoa {
     @PrimaryGeneratedColumn("increment")
     public id?: bigint;
 
-    @Column({type: "varchar", nullable: false})
+    @Column({type: "varchar", nullable: false, primary: true})
     public uuid?: string;
 
     @Column({ type: "varchar", length: 255 })
