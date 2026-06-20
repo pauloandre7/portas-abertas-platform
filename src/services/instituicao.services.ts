@@ -5,8 +5,6 @@ import type { IInstituicaoRepository } from "../repositories/iinstituicao.reposi
 import type { IInstituicaoService } from "./iinstituicao.services.js";
 import { UuidProvider } from "../utils/uuid-provider.utils.js";
 
-
-
 export class InstituicaoService implements IInstituicaoService {
 
     constructor(
@@ -101,15 +99,107 @@ export class InstituicaoService implements IInstituicaoService {
         return await this.repository.delete(uuid);
     }
 
-    listarTodasInstituicoes(): Promise<InstituicaoRequest[]> {
-        throw new Error("Sera implementado em outra feature.");
+    async listarTodasInstituicoes(): Promise<InstituicaoRequest[]> {
+
+        const instituicoes = await this.repository.findAll();
+
+        if (!instituicoes || instituicoes.length === 0) {
+            return [];
+        }
+
+        return instituicoes
+            .filter(i => i.status === "ativo")
+            .map(i => new InstituicaoRequest(
+                i.uuid!,
+                i.nome!,
+                i.cnpj!,
+                i.descricao!,
+                i.status!,
+                i.servicos!,
+                i.contato!,
+                i.endereco!
+            ));
     }
-    listarPorServicos(servicos: string[]): Promise<InstituicaoRequest[]> {
-        throw new Error("Sera implementado em outra feature.");
+    
+    async listarPorServicos(
+        servicos: string[]
+    ): Promise<InstituicaoRequest[]> {
+
+        const instituicoes =
+            await this.repository.findByServicos(servicos);
+
+        if (!instituicoes || instituicoes.length === 0) {
+            return [];
+        }
+
+        return instituicoes
+            .filter(i => i.status === "ativo")
+            .map(i => new InstituicaoRequest(
+                i.uuid!,
+                i.nome!,
+                i.cnpj!,
+                i.descricao!,
+                i.status!,
+                i.servicos!,
+                i.contato!,
+                i.endereco!
+            ));
     }
-    listarPorLocalizacao(cidade: string): Promise<InstituicaoRequest[]> {
-        throw new Error("Sera implementado em outra feature.");
+
+    async listarPorLocalizacao(
+        cidade: string
+    ): Promise<InstituicaoRequest[]> {
+
+        const instituicoes =
+            await this.repository.findByCidade(cidade);
+
+        if (!instituicoes || instituicoes.length === 0) {
+            return [];
+        }
+
+        return instituicoes
+            .filter(i => i.status === "ativo")
+            .map(i => new InstituicaoRequest(
+                i.uuid!,
+                i.nome!,
+                i.cnpj!,
+                i.descricao!,
+                i.status!,
+                i.servicos!,
+                i.contato!,
+                i.endereco!
+            ));
     }
+
+    async listarPorCidadeEServico(
+        cidade: string,
+        servico: string
+    ): Promise<InstituicaoRequest[]> {
+
+        const instituicoes =
+            await this.repository.findByCidadeEServico(
+                cidade,
+                servico
+            );
+
+        if (!instituicoes || instituicoes.length === 0) {
+            return [];
+        }
+
+        return instituicoes
+            .filter(i => i.status === "ativo")
+            .map(i => new InstituicaoRequest(
+                i.uuid!,
+                i.nome!,
+                i.cnpj!,
+                i.descricao!,
+                i.status!,
+                i.servicos!,
+                i.contato!,
+                i.endereco!
+            ));
+    }
+
     async buscarPorNome(nome: string): Promise<InstituicaoRequest[]> {
         const instituicoes: Instituicao[] | null = await this.repository.findByNome(nome);
 

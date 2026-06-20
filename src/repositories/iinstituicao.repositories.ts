@@ -11,4 +11,5 @@ export interface IInstituicaoRepository {
     findAll()                           : Promise<Instituicao[] | null>;
     findByCidade(cidade : string)       : Promise<Instituicao[] | null>;
     findByServicos(servicos: string[])  : Promise<Instituicao[] | null>;
+    findByCidadeEServico(cidade: string, servico: string): Promise<Instituicao[] | null>;
 }

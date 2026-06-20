@@ -106,4 +106,78 @@ export class InstituicaoHandler {
         }
     }
 
+    public listarTodas(req: any, res: any) {
+        this.service.listarTodasInstituicoes()
+            .then(response => {
+
+                res.status(200).json(response);
+
+            }).catch(error => {
+
+                res.status(400).json({
+                    error: error.message
+                });
+
+            });
+    }
+
+    public listarPorCidade(req: any, res: any) {
+        const { cidade } = req.params;
+        this.service.listarPorLocalizacao(cidade)
+            .then(response => {
+
+                res.status(200).json(response);
+
+            }).catch(error => {
+
+                res.status(400).json({
+                    error: error.message
+                });
+
+            });
+    }
+
+    public listarPorServico(req: any, res: any) {
+        const { servico } = req.params;
+
+        this.service.listarPorServicos([servico])
+            .then(response => {
+
+                res.status(200).json(response);
+
+            }).catch(error => {
+
+                res.status(400).json({
+                    error: error.message
+                });
+
+            });
+    }
+
+    public listarPorCidadeEServico(
+        req: any,
+        res: any
+    ) {
+
+        const { cidade, servico } = req.query;
+
+        this.service
+            .listarPorCidadeEServico(
+                String(cidade),
+                String(servico)
+            )
+            .then(response => {
+
+                res.status(200).json(response);
+
+            })
+            .catch(error => {
+
+                res.status(400).json({
+                    error: error.message
+                });
+
+            });
+    }
+
 }

@@ -43,5 +43,25 @@ export class InstituicaoRoutes {
             '/instituicoes/nome/:nome',
             (req, res) => this.handler.instituicaoPorNome(req, res)
         )
-    }
+
+        this.router.get(
+            '/instituicoes',
+            (req, res) => this.handler.listarTodas(req, res)
+        );
+
+        this.router.get(
+            '/instituicoes/cidade/:cidade',
+            (req, res) => this.handler.listarPorCidade(req, res)
+        );
+
+        this.router.get(
+            '/instituicoes/servico/:servico',
+            (req, res) => this.handler.listarPorServico(req, res)
+        );
+
+        this.router.get(
+            '/instituicoes/filtro',
+            (req, res) => this.handler.listarPorCidadeEServico(req, res)
+        );
+    } 
 }

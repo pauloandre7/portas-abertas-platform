@@ -78,18 +78,37 @@ export class InstituicaoRepository implements IInstituicaoRepository {
         });
     }
 
+    async findByCidadeEServico(cidade: string, servico: string): Promise<Instituicao[] | null> {    
+        const instituicoes =
+            await this.repository.find({
+                where: {
+                    endereco: {
+                        cidade: cidade
+                    }
+                }
+            });
+
+        return instituicoes.filter(
+            (instituicao: Instituicao) =>
+                instituicao.servicos?.includes(servico)
+        );
+    }
+
     async findByServicos(servicos: string[]): Promise<Instituicao[] | null> {
         
         if(servicos == null){
             throw new Error("Não foram informados os serviços para filtragem");
         }
 
-        let instituicoes : Instituicao[];
-        instituicoes = new Array();
+        let instituicoes : Instituicao[] = [];
 
         // pega cada item de "servicos" e guarda em "servico", que será usado no método find
         for ( const servico of servicos){
-            instituicoes.concat(await this.repository.findBy({ servicos: servico }));
+            instituicoes = instituicoes.concat(
+                await this.repository.findBy({
+                    servicos: servico
+                })
+            );
         }
 
         if(instituicoes.length){

@@ -12,4 +12,5 @@ export interface IInstituicaoService {
     listarPorLocalizacao(cidade: string): Promise<InstituicaoRequest[]>;
     buscarPorNome(nome: string): Promise<InstituicaoRequest[]>;
     buscaPorUuid(uuid: string) : Promise<InstituicaoRequest>;
+    listarPorCidadeEServico(cidade: string, servico: string): Promise<InstituicaoRequest[]>;
 }
