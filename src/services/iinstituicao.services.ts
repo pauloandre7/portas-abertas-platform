@@ -10,6 +10,6 @@ export interface IInstituicaoService {
     listarTodasInstituicoes(): Promise<InstituicaoRequest[]>;
     listarPorServicos(servicos: string[]) : Promise<InstituicaoRequest[]>;
     listarPorLocalizacao(cidade: string): Promise<InstituicaoRequest[]>;
-    buscarPorNome(nome: string): Promise<InstituicaoRequest>;
+    buscarPorNome(nome: string): Promise<InstituicaoRequest[]>;
     buscaPorUuid(uuid: string) : Promise<InstituicaoRequest>;
 }
