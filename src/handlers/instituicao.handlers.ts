@@ -66,4 +66,26 @@ export class InstituicaoHandler {
         });
     }
 
+    public instituicaoPorUuid(req: any, res: any) {
+        const { uuid } = req.params;
+
+        if(!uuid){
+            res.status(400).json({
+                error: "É necessário informar o uuid pelo path"
+            })
+        } else {
+
+            this.service.buscaPorUuid(uuid)
+            .then( (response : InstituicaoRequest) => {
+                res.status(200).json({response})
+            }).catch( error => {
+                res.status(400).json({
+                    error: error.message
+                })
+            })
+        }
+
+
+    }
+
 }
