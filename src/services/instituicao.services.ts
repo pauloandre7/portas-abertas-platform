@@ -1,5 +1,4 @@
 import type { InstituicaoCreateRequest } from "../dtos/instituicao-create-request.dtos.js";
-import type { InstituicaoDeleteRequest } from "../dtos/instituicao-delete-request.dtos.js";
 import { InstituicaoRequest } from "../dtos/instituicao-request.dtos.js";
 import { Instituicao } from "../models/instituicao.model.js";
 import type { IInstituicaoRepository } from "../repositories/iinstituicao.repositories.js";
@@ -91,19 +90,15 @@ export class InstituicaoService implements IInstituicaoService {
         );
     }
 
-    async excluirInstituicao(
-        deleteRequest: InstituicaoDeleteRequest
-    ): Promise<boolean> {
+    async excluirInstituicao( uuid: string ): Promise<boolean> {
 
-        const instituicao = await this.repository.findByUuid(
-            deleteRequest.uuid
-        );
+        const instituicao = await this.repository.findByUuid(uuid);
 
         if (!instituicao) {
             throw new Error("Instituição não encontrada.");
         }
 
-        return await this.repository.delete(deleteRequest.uuid);
+        return await this.repository.delete(uuid);
     }
 
     listarTodasInstituicoes(): Promise<InstituicaoRequest[]> {
@@ -117,5 +112,23 @@ export class InstituicaoService implements IInstituicaoService {
     }
     buscarPorNome(nome: string): Promise<InstituicaoRequest> {
         throw new Error("Sera implementado em outra feature.");
+    }
+    async buscaPorUuid(uuid: string): Promise<InstituicaoRequest> {
+        
+        const instituicao: Instituicao | null = await this.repository.findByUuid(uuid);
+
+        if(!instituicao || instituicao.uuid == null || instituicao.nome == null
+            || instituicao.cnpj == null || !instituicao.descricao || !instituicao.status
+            || instituicao.servicos == null || instituicao.contato == null 
+            || instituicao.endereco == null
+        ) {
+            throw new Error("Instituição não encontrada.");
+        }
+
+        return new InstituicaoRequest( instituicao.uuid, instituicao.nome, 
+            instituicao.cnpj, instituicao.descricao, instituicao.status, 
+            instituicao.servicos, instituicao.contato, instituicao.endereco
+        );
+
     }
 }
