@@ -8,7 +8,7 @@ Documento descritivo das rotas disponíveis no estado atual do projeto, com foco
 - A rota de autenticação é montada em `/auth`
 - As rotas de instituição são montadas na raiz (`/`)
 - Existe também a rota de saúde `/respirando`
-- As rotas de instituição usam `authMiddleware`, então exigem header `Authorization: Bearer <token>`
+- As rotas de instituição protegidas usam `authMiddleware`, então exigem header `Authorization: Bearer <token>`; as consultas por UUID e nome são públicas
 
 ## Rotas disponíveis
 
@@ -18,6 +18,8 @@ Documento descritivo das rotas disponíveis no estado atual do projeto, com foco
 | POST | `/instituicao` | Protegida | Cadastrar instituição |
 | PUT | `/instituicao` | Protegida | Atualizar instituição existente |
 | DELETE | `/instituicao/:uuid` | Protegida | Excluir instituição |
+| GET | `/instituicao/uuid/:uuid` | Pública | Buscar instituição por UUID |
+| GET | `/instituicoes/nome/:nome` | Pública | Buscar instituições por nome |
 | GET | `/respirando` | Pública | Health check da API |
 
 ## 1. POST /auth/login
@@ -317,11 +319,157 @@ Status: `200 OK`
 }
 ```
 
+## 6. GET /instituicao/uuid/:uuid
+
+### Autenticação
+
+Essa rota é pública e não exige token JWT.
+
+### Parâmetros de rota
+
+- `uuid`: string na URL
+
+Exemplo:
+
+```http
+GET /instituicao/uuid/3dd0f2d7-2d1e-4d9a-a1f1-9d9f4d7c1a11
+```
+
+### Body esperado
+
+Não há body.
+
+### Resposta de sucesso
+
+Status: `200 OK`
+
+O backend retorna um objeto com a chave `response` contendo um `InstituicaoRequest`:
+
+- `response.uuid`: string
+- `response.nome`: string
+- `response.cnpj`: string
+- `response.descricao`: string
+- `response.status`: string
+- `response.servicos`: string[]
+- `response.contato`: objeto `ContatoDto`
+- `response.endereco`: objeto `EnderecoDto`
+
+Exemplo:
+
+```json
+{
+  "response": {
+    "uuid": "3dd0f2d7-2d1e-4d9a-a1f1-9d9f4d7c1a11",
+    "nome": "Instituto Exemplo",
+    "cnpj": "12345678000199",
+    "descricao": "Instituição voltada para atendimento e apoio social",
+    "status": "ativo",
+    "servicos": ["atendimento", "orientacao"],
+    "contato": {
+      "telefone": "41999990000",
+      "email": "contato@exemplo.org",
+      "instagram": "@institutoexemplo",
+      "facebook": "institutoexemplo",
+      "site": "https://exemplo.org"
+    },
+    "endereco": {
+      "logradouro": "Rua das Flores",
+      "bairro": "Centro",
+      "numero": 100,
+      "cep": "80010000",
+      "cidade": "Curitiba",
+      "estado": "PR",
+      "pais": "Brasil"
+    }
+  }
+}
+```
+
+### Respostas de erro observadas no código
+
+- `400 Bad Request` com `{ "error": "É necessário informar o uuid pelo path." }` quando o parâmetro não vier na URL
+- `400 Bad Request` com `{ "error": "Instituição não encontrada." }` quando não existir instituição para o UUID informado
+
+## 7. GET /instituicoes/nome/:nome
+
+### Autenticação
+
+Essa rota é pública e não exige token JWT.
+
+### Parâmetros de rota
+
+- `nome`: string na URL
+
+Exemplo:
+
+```http
+GET /instituicoes/nome/instituto
+```
+
+### Body esperado
+
+Não há body.
+
+### Resposta de sucesso
+
+Status: `200 OK`
+
+O backend retorna um objeto com a chave `response` contendo um array de `InstituicaoRequest`:
+
+- `response[].uuid`: string
+- `response[].nome`: string
+- `response[].cnpj`: string
+- `response[].descricao`: string
+- `response[].status`: string
+- `response[].servicos`: string[]
+- `response[].contato`: objeto `ContatoDto`
+- `response[].endereco`: objeto `EnderecoDto`
+
+Exemplo:
+
+```json
+{
+  "response": [
+    {
+      "uuid": "3dd0f2d7-2d1e-4d9a-a1f1-9d9f4d7c1a11",
+      "nome": "Instituto Exemplo",
+      "cnpj": "12345678000199",
+      "descricao": "Instituição voltada para atendimento e apoio social",
+      "status": "ativo",
+      "servicos": ["atendimento", "orientacao"],
+      "contato": {
+        "telefone": "41999990000",
+        "email": "contato@exemplo.org",
+        "instagram": "@institutoexemplo",
+        "facebook": "institutoexemplo",
+        "site": "https://exemplo.org"
+      },
+      "endereco": {
+        "logradouro": "Rua das Flores",
+        "bairro": "Centro",
+        "numero": 100,
+        "cep": "80010000",
+        "cidade": "Curitiba",
+        "estado": "PR",
+        "pais": "Brasil"
+      }
+    }
+  ]
+}
+```
+
+### Respostas de erro observadas no código
+
+- `400 Bad Request` com `{ "error": "É necessário informar o nome pelo path." }` quando o parâmetro não vier na URL
+- `400 Bad Request` com `{ "error": "Não foi encontrada nenhuma instituição com esse nome." }` quando não houver correspondência
+
 ## Observações para o front-end
 
 - Enviar `Authorization: Bearer <token>` em todas as rotas de instituição.
 - Tratar `POST /auth/login` como a origem do token JWT.
 - No cadastro de instituição, enviar todos os campos obrigatórios da estrutura aninhada de contato e endereço.
 - Na atualização de instituição, considerar que o backend aceita atualização parcial, desde que `uuid` seja enviado.
+- Para consulta pública por UUID, ler a instituição dentro da chave `response`.
+- Para busca pública por nome, ler a lista de instituições dentro da chave `response`; a busca retorna nomes que começam com o valor informado e não diferencia maiúsculas/minúsculas.
 - O campo `status` deve respeitar os valores `ativo`, `inativo` ou `pendente`.
 - O payload de `endereco.numero` chega como número no JSON, embora o model interno use `bigint`.
