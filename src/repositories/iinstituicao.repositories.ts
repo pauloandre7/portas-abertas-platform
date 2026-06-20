@@ -7,6 +7,7 @@ export interface IInstituicaoRepository {
     update(instituicao: Instituicao)    : Promise<boolean>;
     findById(id: bigint)                : Promise<Instituicao | null>;
     findByUuid(uuid: string)            : Promise<Instituicao | null>;
+    findByNome(nome: string)            : Promise<Instituicao[] | null>;
     findAll()                           : Promise<Instituicao[] | null>;
     findByCidade(cidade : string)       : Promise<Instituicao[] | null>;
     findByServicos(servicos: string[])  : Promise<Instituicao[] | null>;
