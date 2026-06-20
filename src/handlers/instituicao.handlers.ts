@@ -2,7 +2,6 @@ import { response } from "express";
 import { InstituicaoRequest } from "../dtos/instituicao-request.dtos.js";
 import type { IInstituicaoService } from "../services/iinstituicao.services.js";
 import { InstituicaoCreateRequest } from "../dtos/instituicao-create-request.dtos.js";
-import { InstituicaoDeleteRequest } from "../dtos/instituicao-delete-request.dtos.js";
 
 export class InstituicaoHandler {
 
@@ -50,9 +49,7 @@ export class InstituicaoHandler {
 
     public excluir(req: any, res: any){
 
-        const request = new InstituicaoDeleteRequest(
-            req.params.uuid
-        );
+        const request = String(req.params.uuid).toString();
 
         this.service.excluirInstituicao(request)
         .then(() => {
