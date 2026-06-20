@@ -110,9 +110,39 @@ export class InstituicaoService implements IInstituicaoService {
     listarPorLocalizacao(cidade: string): Promise<InstituicaoRequest[]> {
         throw new Error("Sera implementado em outra feature.");
     }
-    buscarPorNome(nome: string): Promise<InstituicaoRequest> {
-        throw new Error("Sera implementado em outra feature.");
+    async buscarPorNome(nome: string): Promise<InstituicaoRequest[]> {
+        const instituicoes: Instituicao[] | null = await this.repository.findByNome(nome);
+
+        if(!instituicoes || instituicoes.length === 0) {
+            throw new Error("Não foi encontrada nenhuma instituição com esse nome.");
+        }
+
+        let instituicoesResponse: InstituicaoRequest[] = [];
+
+        instituicoes.forEach((instituicao, index) => {
+            // O método forEach implementa um looping igual o for each do java.
+            // A arrow function que defini vai receber a instituicao do loop no 
+            // objeto instituicao. Aí basta utilizar no bloco de código da função
+
+            if(!instituicao || instituicao.uuid == null || instituicao.nome == null
+                || instituicao.cnpj == null || !instituicao.descricao || !instituicao.status
+                || instituicao.servicos == null || instituicao.contato == null 
+                || instituicao.endereco == null
+            ) {
+                throw new Error("Não foi encontrada nenhuma instituição com esse nome.");
+            }
+
+            instituicoesResponse.push(
+                new InstituicaoRequest( instituicao.uuid, instituicao.nome, 
+                    instituicao.cnpj, instituicao.descricao, instituicao.status, 
+                    instituicao.servicos, instituicao.contato, instituicao.endereco
+                )
+            );
+        });
+
+        return instituicoesResponse;
     }
+
     async buscaPorUuid(uuid: string): Promise<InstituicaoRequest> {
         
         const instituicao: Instituicao | null = await this.repository.findByUuid(uuid);
