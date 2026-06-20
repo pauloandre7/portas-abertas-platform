@@ -1,4 +1,4 @@
-import { Repository } from "typeorm";
+import { ILike, Repository } from "typeorm";
 import { Instituicao } from "../models/instituicao.model.js";
 import type { IInstituicaoRepository } from "./iinstituicao.repositories.js"
 import { AppDataSource } from "../config/database.js";
@@ -51,6 +51,14 @@ export class InstituicaoRepository implements IInstituicaoRepository {
     async findByUuid(uuid: string): Promise<Instituicao | null> {
 
         return await this.repository.findOneBy({uuid: uuid});
+    }
+
+    async findByNome(nome: string): Promise<Instituicao[] | null> {
+
+        // O decorator ILike permite realizar uma busca personalizada
+        // utilizando operadores do SQL. O % tá sendo usado pra pegar
+        // tudo que COMEÇA com nome. Além disso, é sem case sensitive
+        return await this.repository.findBy({nome: ILike(`${nome}%`)});
     }
 
     async findAll(): Promise<Instituicao[] | null> {

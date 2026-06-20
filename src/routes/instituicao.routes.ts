@@ -35,8 +35,13 @@ export class InstituicaoRoutes {
 
         // Métodos públicos não passam pelo authMiddleware
         this.router.get(
-            '/instituicao/:uuid',
+            '/instituicao/uuid/:uuid',
             (req, res) => this.handler.instituicaoPorUuid(req, res)
+        )
+
+        this.router.get(
+            '/instituicoes/nome/:nome',
+            (req, res) => this.handler.instituicaoPorNome(req, res)
         )
     }
 }

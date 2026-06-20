@@ -71,7 +71,7 @@ export class InstituicaoHandler {
 
         if(!uuid){
             res.status(400).json({
-                error: "É necessário informar o uuid pelo path"
+                error: "É necessário informar o uuid pelo path."
             })
         } else {
 
@@ -84,8 +84,26 @@ export class InstituicaoHandler {
                 })
             })
         }
+    }
 
+    public instituicaoPorNome(req: any, res: any){
+        
+        const { nome } = req.params;
 
+        if( !nome ){
+            res.status(400).json({
+                error: "É necessário informar o nome pelo path."
+            })
+        } else {
+            this.service.buscarPorNome(nome)
+            .then( (response : InstituicaoRequest[]) => {
+                res.status(200).json({response})
+            }).catch( error => {
+                res.status(400).json({
+                    error: error.message
+                })
+            })
+        }
     }
 
 }
