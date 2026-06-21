@@ -2,7 +2,6 @@ import { ILike, Repository } from "typeorm";
 import { Instituicao } from "../models/instituicao.model.js";
 import type { IInstituicaoRepository } from "./iinstituicao.repositories.js"
 import { AppDataSource } from "../config/database.js";
-import type { Long } from "typeorm/driver/mongodb/bson.typings.js";
 
 export class InstituicaoRepository implements IInstituicaoRepository {
     
