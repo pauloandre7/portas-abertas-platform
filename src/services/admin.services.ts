@@ -74,7 +74,34 @@ export class AdminService implements IAdminService {
     }
 
     async update(updateRequest: AdminRequest): Promise<AdminRequest> {
-        throw new Error("Esse método será implementado em outra atualização");
+        if (!updateRequest.uuid) {
+            throw new Error("Identificador UUID é obrigatório para atualizar o administrador.");
+        }
+
+        const adminOriginal = await this.repository.findByUuid(updateRequest.uuid);
+
+        if (!adminOriginal) {
+            throw new Error("Administrador não encontrado.");
+        }
+
+        adminOriginal.nome = updateRequest.nome ?? adminOriginal.nome;
+        adminOriginal.cpf = updateRequest.cpf ?? adminOriginal.cpf;
+        adminOriginal.email = updateRequest.email ?? adminOriginal.email;
+        adminOriginal.endereco = updateRequest.endereco ?? adminOriginal.endereco;
+
+        const atualizou = await this.repository.update(adminOriginal);
+
+        if (!atualizou) {
+            throw new Error("Não foi possível atualizar o administrador.");
+        }
+
+        return new AdminRequest(
+            adminOriginal.uuid!,
+            adminOriginal.nome!,
+            adminOriginal.cpf!,
+            adminOriginal.email!,
+            adminOriginal.endereco! as any
+        );
     }
 
     async buscarPorUuid(uuid: string): Promise<AdminRequest> {

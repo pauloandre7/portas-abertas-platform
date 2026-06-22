@@ -25,6 +25,28 @@ export class AdminHandler {
             });
     }
 
+    public atualizar(req: any, res: any): void {
+        const { uuid } = req.params;
+
+        if (!uuid) {
+            res.status(400).json({ error: "Identificador UUID é obrigatório para atualizar o administrador." });
+            return;
+        }
+
+        const request: AdminRequest = req.body;
+        request.uuid = uuid;
+
+        this.service.update(request)
+            .then((response: AdminRequest) => {
+                res.status(200).json(response);
+            })
+            .catch(error => {
+                res.status(400).json({
+                    error: error.message
+                });
+            });
+    }
+
     public deletar(req: any, res: any): void {
         const { uuid } = req.params;
 
