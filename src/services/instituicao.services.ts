@@ -99,30 +99,38 @@ export class InstituicaoService implements IInstituicaoService {
         return await this.repository.delete(uuid);
     }
 
-    async listarTodasInstituicoes(): Promise<InstituicaoRequest[]> {
+    async listarTodasInstituicoes(apenasAtivos: boolean): Promise<InstituicaoRequest[]> {
 
         const instituicoes = await this.repository.findAll();
 
         if (!instituicoes || instituicoes.length === 0) {
-            return [];
+            throw new Error("Nenhuma instituição foi encontrada");
         }
 
-        return instituicoes
-            .filter(i => i.status === "ativo")
-            .map(i => new InstituicaoRequest(
-                i.uuid!,
-                i.nome!,
-                i.cnpj!,
-                i.descricao!,
-                i.status!,
-                i.servicos!,
-                i.contato!,
-                i.endereco!
-            ));
+        
+
+        if(apenasAtivos) {
+
+            /* 
+            // O filter mapeia todo o array, retorna cada objeto em i e monta um novo array
+            // aplicando o filtro definido depois da arrow function.
+            // O map mapeia o array, retorna cada objeto ali no "i" e manda para a arrow func
+            // como parâmetro para fazer os novos objetos no construtor de InstituicaoRequest
+            // */
+            return instituicoes.filter(i => i.status === "ativo")
+                .map(i => new InstituicaoRequest(
+                    i.uuid!, i.nome!, i.cnpj!, i.descricao!, 
+                    i.status!, i.servicos!, i.contato!, i.endereco!
+                ));
+        } else {
+            return instituicoes.map(i => new InstituicaoRequest(
+                    i.uuid!, i.nome!, i.cnpj!, i.descricao!, 
+                    i.status!, i.servicos!, i.contato!, i.endereco!
+                ));
+        }
     }
     
-    async listarPorServicos(
-        servicos: string[]
+    async listarPorServicos( apenasAtivos: boolean, servicos: string[]
     ): Promise<InstituicaoRequest[]> {
 
         const instituicoes =
@@ -132,21 +140,23 @@ export class InstituicaoService implements IInstituicaoService {
             return [];
         }
 
-        return instituicoes
-            .filter(i => i.status === "ativo")
-            .map(i => new InstituicaoRequest(
-                i.uuid!,
-                i.nome!,
-                i.cnpj!,
-                i.descricao!,
-                i.status!,
-                i.servicos!,
-                i.contato!,
-                i.endereco!
-            ));
+        if(apenasAtivos) {
+
+            return instituicoes.filter(i => i.status === "ativo")
+                .map(i => new InstituicaoRequest(
+                    i.uuid!, i.nome!, i.cnpj!, i.descricao!, 
+                    i.status!, i.servicos!, i.contato!, i.endereco!
+                ));
+        } else {
+            return instituicoes.map(i => new InstituicaoRequest(
+                    i.uuid!, i.nome!, i.cnpj!, i.descricao!, 
+                    i.status!, i.servicos!, i.contato!, i.endereco!
+                ));
+        }
     }
 
     async listarPorLocalizacao(
+        apenasAtivos: boolean,
         cidade: string
     ): Promise<InstituicaoRequest[]> {
 
@@ -157,21 +167,23 @@ export class InstituicaoService implements IInstituicaoService {
             return [];
         }
 
-        return instituicoes
-            .filter(i => i.status === "ativo")
-            .map(i => new InstituicaoRequest(
-                i.uuid!,
-                i.nome!,
-                i.cnpj!,
-                i.descricao!,
-                i.status!,
-                i.servicos!,
-                i.contato!,
-                i.endereco!
-            ));
+        if(apenasAtivos) {
+
+            return instituicoes.filter(i => i.status === "ativo")
+                .map(i => new InstituicaoRequest(
+                    i.uuid!, i.nome!, i.cnpj!, i.descricao!, 
+                    i.status!, i.servicos!, i.contato!, i.endereco!
+                ));
+        } else {
+            return instituicoes.map(i => new InstituicaoRequest(
+                    i.uuid!, i.nome!, i.cnpj!, i.descricao!, 
+                    i.status!, i.servicos!, i.contato!, i.endereco!
+                ));
+        }
     }
 
     async listarPorCidadeEServico(
+        apenasAtivos: boolean,
         cidade: string,
         servico: string
     ): Promise<InstituicaoRequest[]> {
@@ -186,56 +198,50 @@ export class InstituicaoService implements IInstituicaoService {
             return [];
         }
 
-        return instituicoes
-            .filter(i => i.status === "ativo")
-            .map(i => new InstituicaoRequest(
-                i.uuid!,
-                i.nome!,
-                i.cnpj!,
-                i.descricao!,
-                i.status!,
-                i.servicos!,
-                i.contato!,
-                i.endereco!
-            ));
+        if(apenasAtivos) {
+
+            return instituicoes.filter(i => i.status === "ativo")
+                .map(i => new InstituicaoRequest(
+                    i.uuid!, i.nome!, i.cnpj!, i.descricao!, 
+                    i.status!, i.servicos!, i.contato!, i.endereco!
+                ));
+        } else {
+            return instituicoes.map(i => new InstituicaoRequest(
+                    i.uuid!, i.nome!, i.cnpj!, i.descricao!, 
+                    i.status!, i.servicos!, i.contato!, i.endereco!
+                ));
+        }
     }
 
-    async buscarPorNome(nome: string): Promise<InstituicaoRequest[]> {
+    async buscarPorNome(apenasAtivos: boolean, nome: string): Promise<InstituicaoRequest[]> {
         const instituicoes: Instituicao[] | null = await this.repository.findByNome(nome);
 
         if(!instituicoes || instituicoes.length === 0) {
             throw new Error("Não foi encontrada nenhuma instituição com esse nome.");
         }
 
-        let instituicoesResponse: InstituicaoRequest[] = [];
+        if(apenasAtivos) {
 
-        instituicoes.forEach((instituicao, index) => {
-            // O método forEach implementa um looping igual o for each do java.
-            // A arrow function que defini vai receber a instituicao do loop no 
-            // objeto instituicao. Aí basta utilizar no bloco de código da função
-
-            if(!instituicao || instituicao.uuid == null || instituicao.nome == null
-                || instituicao.cnpj == null || !instituicao.descricao || !instituicao.status
-                || instituicao.servicos == null || instituicao.contato == null 
-                || instituicao.endereco == null
-            ) {
-                throw new Error("Não foi encontrada nenhuma instituição com esse nome.");
-            }
-
-            instituicoesResponse.push(
-                new InstituicaoRequest( instituicao.uuid, instituicao.nome, 
-                    instituicao.cnpj, instituicao.descricao, instituicao.status, 
-                    instituicao.servicos, instituicao.contato, instituicao.endereco
-                )
-            );
-        });
-
-        return instituicoesResponse;
+            return instituicoes.filter(i => i.status === "ativo")
+                .map(i => new InstituicaoRequest(
+                    i.uuid!, i.nome!, i.cnpj!, i.descricao!, 
+                    i.status!, i.servicos!, i.contato!, i.endereco!
+                ));
+        } else {
+            return instituicoes.map(i => new InstituicaoRequest(
+                    i.uuid!, i.nome!, i.cnpj!, i.descricao!, 
+                    i.status!, i.servicos!, i.contato!, i.endereco!
+                ));
+        }
     }
 
-    async buscaPorUuid(uuid: string): Promise<InstituicaoRequest> {
+    async buscaPorUuid(apenasAtivos: boolean, uuid: string): Promise<InstituicaoRequest> {
         
         const instituicao: Instituicao | null = await this.repository.findByUuid(uuid);
+
+        if(apenasAtivos && !(instituicao?.status === "ativo")) {
+            throw new Error("Nenhuma instituição encontrada");
+        }
 
         if(!instituicao || instituicao.uuid == null || instituicao.nome == null
             || instituicao.cnpj == null || !instituicao.descricao || !instituicao.status
