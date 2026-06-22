@@ -24,4 +24,36 @@ export class AdminHandler {
                 });
             });
     }
+
+    public deletar(req: any, res: any): void {
+        const { uuid } = req.params;
+
+        this.service.delete(uuid)
+            .then((sucesso: boolean) => {
+                if (sucesso) {
+                    // status 204 indica sucesso sem corpo de resposta
+                    res.status(204).send();
+                } else {
+                    res.status(400).json({ error: "Não foi possível deletar o administrador." });
+                }
+            })
+            .catch(error => {
+                res.status(400).json({
+                    error: error.message
+                });
+            });
+    }
+
+    public listarTodos(req: any, res: any): void {
+        this.service.listarTodos()
+            .then((response: AdminRequest[]) => {
+                // Retorna 200 OK com a lista de administradores formatada pelo DTO
+                res.status(200).json(response);
+            })
+            .catch(error => {
+                res.status(400).json({
+                    error: error.message
+                });
+            });
+    }
 }
