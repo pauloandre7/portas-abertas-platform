@@ -33,7 +33,13 @@ export class InstituicaoRoutes {
             (req, res) => this.handler.excluir(req, res)
         );
 
+
         // Métodos públicos não passam pelo authMiddleware
+        this.router.get(
+            '/instituicoes',
+            (req, res) => this.handler.listar(req, res)
+        );
+
         this.router.get(
             '/instituicao/uuid/:uuid',
             (req, res) => this.handler.instituicaoPorUuid(req, res)
@@ -45,18 +51,8 @@ export class InstituicaoRoutes {
         )
 
         this.router.get(
-            '/instituicoes',
-            (req, res) => this.handler.listarTodas(req, res)
-        );
-
-        this.router.get(
             '/instituicoes/cidade/:cidade',
             (req, res) => this.handler.listarPorCidade(req, res)
-        );
-
-        this.router.get(
-            '/instituicoes/servico/:servico',
-            (req, res) => this.handler.listarPorServico(req, res)
         );
 
         this.router.get(
