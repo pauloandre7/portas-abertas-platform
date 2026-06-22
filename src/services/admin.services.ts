@@ -9,7 +9,7 @@ import type { AdminCreateRequest } from "../dtos/admin-create.dtos.js";
 export class AdminService implements IAdminService {
 
     constructor(
-        private readonly adminRepository: IAdminRepository
+        private readonly repository: IAdminRepository
     ) {}
 
     async create(cadastrarRequest: AdminCreateRequest): Promise<AdminRequest> {
@@ -28,7 +28,7 @@ export class AdminService implements IAdminService {
             cadastrarRequest.endereco as any
         );
 
-        const salvou = await this.adminRepository.create(admin);
+        const salvou = await this.repository.create(admin);
 
         if (!salvou) {
             throw new Error("Não foi possível cadastrar o administrador.");
@@ -44,7 +44,33 @@ export class AdminService implements IAdminService {
     }
 
     async delete(uuid: string): Promise<boolean> {
-        throw new Error("Esse método será implementado em outra atualização");
+        const instituicao = await this.repository.findByUuid(uuid);
+
+        if (!instituicao) {
+            throw new Error("Instituição não encontrada.");
+        }
+
+        return await this.repository.delete(uuid);
+    }
+
+    async listarTodos(): Promise<AdminRequest[]> {
+        
+        const administradores = await this.repository.findAll();
+
+        if (!administradores || administradores.length === 0) {
+            throw new Error("Nenhuma administrador encontrado");
+        }
+
+        // Mapeia o array de entidades 'Admin' para o array de DTOs 'AdminRequest'
+        return administradores.map(admin => {
+            return new AdminRequest(
+                admin.uuid!,
+                admin.nome!,
+                admin.cpf!,
+                admin.email!,
+                admin.endereco! as any
+            );
+        });
     }
 
     async update(updateRequest: AdminRequest): Promise<AdminRequest> {
@@ -52,10 +78,6 @@ export class AdminService implements IAdminService {
     }
 
     async buscarPorUuid(uuid: string): Promise<AdminRequest> {
-        throw new Error("Esse método será implementado em outra atualização");
-    }
-
-    async listarTodos(): Promise<AdminRequest[]> {
         throw new Error("Esse método será implementado em outra atualização");
     }
 
