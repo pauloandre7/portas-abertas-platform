@@ -18,9 +18,17 @@ Documento descritivo das rotas disponíveis no estado atual do projeto, com foco
 | POST | `/instituicao` | Protegida | Cadastrar instituição |
 | PUT | `/instituicao` | Protegida | Atualizar instituição existente |
 | DELETE | `/instituicao/:uuid` | Protegida | Excluir instituição |
-| GET | `/instituicao/uuid/:uuid` | Pública | Buscar instituição por UUID |
-| GET | `/instituicoes/nome/:nome` | Pública | Buscar instituições por nome |
 | GET | `/respirando` | Pública | Health check da API |
+| GET | `/instituicao/uuid/:uuid` | Pública | Buscar instituição por UUID (apenas ativas) |
+| GET | `/instituicoes/nome/:nome` | Pública | Buscar instituições por nome (apenas ativas) |
+| GET | `/instituicoes` | Pública | Listar todas as ativas ou filtrar por serviço (Query Param) |
+| GET | `/instituicoes/cidade/:cidade` | Pública | Buscar instituições ativas por cidade |
+| GET | `/instituicoes/filtro` | Pública | Buscar instituições ativas cruzando cidade e serviço |
+| GET | `/admin/instituicoes` | Protegida| Listar todas as instituições (ignora status) ou filtrar por serviço |
+| GET | `/admin/instituicao/uuid/:uuid` | Protegida| Buscar instituição por UUID (ignora status) |
+| GET | `/admin/instituicoes/nome/:nome` | Protegida| Buscar instituições por nome (ignora status) |
+| GET | `/admin/instituicoes/cidade/:cidade` | Protegida| Buscar instituições por cidade (ignora status) |
+| GET | `/admin/instituicoes/filtro` | Protegida| Buscar instituições cruzando cidade e serviço (ignora status) |
 
 ## 1. POST /auth/login
 
@@ -318,114 +326,19 @@ Status: `200 OK`
   "status": "ok"
 }
 ```
-
-## 6. GET /instituicao/uuid/:uuid
+## 6. GET /instituicao/uuid/:uuid e GET /admin/instituicao/uuid/:uuid
 
 ### Autenticação
-
-Essa rota é pública e não exige token JWT.
+- Rota sem `/admin/`: Pública (Não exige token).
+- Rota com `/admin/`: Protegida (Exige token JWT no header).
 
 ### Parâmetros de rota
-
 - `uuid`: string na URL
 
-Exemplo:
-
-```http
-GET /instituicao/uuid/3dd0f2d7-2d1e-4d9a-a1f1-9d9f4d7c1a11
-```
-
-### Body esperado
-
-Não há body.
-
 ### Resposta de sucesso
-
 Status: `200 OK`
-
-O backend retorna um objeto com a chave `response` contendo um `InstituicaoRequest`:
-
-- `response.uuid`: string
-- `response.nome`: string
-- `response.cnpj`: string
-- `response.descricao`: string
-- `response.status`: string
-- `response.servicos`: string[]
-- `response.contato`: objeto `ContatoDto`
-- `response.endereco`: objeto `EnderecoDto`
-
-Exemplo:
-
-```json
-{
-  "response": {
-    "uuid": "3dd0f2d7-2d1e-4d9a-a1f1-9d9f4d7c1a11",
-    "nome": "Instituto Exemplo",
-    "cnpj": "12345678000199",
-    "descricao": "Instituição voltada para atendimento e apoio social",
-    "status": "ativo",
-    "servicos": ["atendimento", "orientacao"],
-    "contato": {
-      "telefone": "41999990000",
-      "email": "contato@exemplo.org",
-      "instagram": "@institutoexemplo",
-      "facebook": "institutoexemplo",
-      "site": "https://exemplo.org"
-    },
-    "endereco": {
-      "logradouro": "Rua das Flores",
-      "bairro": "Centro",
-      "numero": 100,
-      "cep": "80010000",
-      "cidade": "Curitiba",
-      "estado": "PR",
-      "pais": "Brasil"
-    }
-  }
-}
-```
-
-### Respostas de erro observadas no código
-
-- `400 Bad Request` com `{ "error": "É necessário informar o uuid pelo path." }` quando o parâmetro não vier na URL
-- `400 Bad Request` com `{ "error": "Instituição não encontrada." }` quando não existir instituição para o UUID informado
-
-## 7. GET /instituicoes/nome/:nome
-
-### Autenticação
-
-Essa rota é pública e não exige token JWT.
-
-### Parâmetros de rota
-
-- `nome`: string na URL
-
-Exemplo:
-
-```http
-GET /instituicoes/nome/instituto
-```
-
-### Body esperado
-
-Não há body.
-
-### Resposta de sucesso
-
-Status: `200 OK`
-
-O backend retorna um objeto com a chave `response` contendo um array de `InstituicaoRequest`:
-
-- `response[].uuid`: string
-- `response[].nome`: string
-- `response[].cnpj`: string
-- `response[].descricao`: string
-- `response[].status`: string
-- `response[].servicos`: string[]
-- `response[].contato`: objeto `ContatoDto`
-- `response[].endereco`: objeto `EnderecoDto`
-
-Exemplo:
+O backend retorna um objeto com a chave `response` contendo um `InstituicaoRequest`.
+*(Atenção front-end: Os dados estão dentro da propriedade `response`)*.
 
 ```json
 {
@@ -457,6 +370,191 @@ Exemplo:
   ]
 }
 ```
+## 7. GET /instituicoes/nome/:nome e GET /admin/instituicoes/nome/:nome
+
+### Autenticação
+- Rota sem `/admin/`: Pública (Não exige token).
+- Rota com `/admin/`: Protegida (Exige token JWT no header).
+
+### Parâmetros de rota
+- `nome`: string na URL
+
+### Resposta de sucesso
+Status: `200 OK`
+O backend retorna um objeto com a chave `response` contendo um array de `InstituicaoRequest`.
+*(Atenção front-end: Os dados estão dentro da propriedade `response`)*.
+
+```json
+{
+  "response": [
+    {
+      "uuid": "3dd0f2d7-2d1e-4d9a-a1f1-9d9f4d7c1a11",
+      "nome": "Instituto Exemplo",
+      "cnpj": "12345678000199",
+      "descricao": "Instituição voltada para atendimento e apoio social",
+      "status": "ativo",
+      "servicos": ["atendimento", "orientacao"],
+      "contato": {
+        "telefone": "41999990000",
+        "email": "contato@exemplo.org",
+        "instagram": "@institutoexemplo",
+        "facebook": "institutoexemplo",
+        "site": "[https://exemplo.org](https://exemplo.org)"
+      },
+      "endereco": {
+        "logradouro": "Rua das Flores",
+        "bairro": "Centro",
+        "numero": 100,
+        "cep": "80010000",
+        "cidade": "Curitiba",
+        "estado": "PR",
+        "pais": "Brasil"
+      }
+    }
+  ]
+}
+```
+
+## 8. GET /instituicoes e GET /admin/instituicoes
+
+### Autenticação
+- Rota sem `/admin/`: Pública (Não exige token).
+- Rota com `/admin/`: Protegida (Exige token JWT no header).
+
+### Parâmetros de Query (Query Params)
+Esta rota possui comportamento duplo determinado pela URL:
+- **Listar Todas:** `GET /instituicoes` (Sem parâmetros, retorna todas as instituições).
+- **Filtrar por Serviços:** `GET /instituicoes?servico=psicologia`
+  - *(Dica para o Front-end: Para enviar múltiplos serviços, repita o parâmetro. Ex: `?servico=psicologia&servico=terapia`)*.
+
+### Resposta de sucesso
+Status: `200 OK`
+Retorna o Array direto de `InstituicaoRequest`.
+*(Atenção front-end: Diferente da busca por nome ou UUID, esta rota NÃO possui a chave encapsuladora `response`. O array vem direto no root).*
+
+```json
+[
+  {
+    "uuid": "3dd0f2d7-2d1e-4d9a-a1f1-9d9f4d7c1a11",
+    "nome": "Instituto Exemplo",
+    "cnpj": "12345678000199",
+    "descricao": "Instituição voltada para atendimento e apoio social",
+    "status": "ativo",
+    "servicos": [
+      "psicologia",
+      "terapia"
+    ],
+    "contato": {
+      "telefone": "41999990000",
+      "email": "contato@exemplo.org",
+      "instagram": "@institutoexemplo",
+      "facebook": "institutoexemplo",
+      "site": "[https://exemplo.org](https://exemplo.org)"
+    },
+    "endereco": {
+      "logradouro": "Rua das Flores",
+      "bairro": "Centro",
+      "numero": 100,
+      "cep": "80010000",
+      "cidade": "Curitiba",
+      "estado": "PR",
+      "pais": "Brasil"
+    }
+  }
+]
+```
+
+## 9. GET /instituicoes/cidade/:cidade e GET /admin/instituicoes/cidade/:cidade
+
+### Autenticação
+- Rota sem `/admin/`: Pública (Não exige token).
+- Rota com `/admin/`: Protegida (Exige token JWT no header).
+
+### Parâmetros de rota
+- `cidade`: string na URL (Ex: `/instituicoes/cidade/Curitiba`)
+
+### Resposta de sucesso
+Status: `200 OK`
+Retorna o Array direto de `InstituicaoRequest` pertencentes àquela cidade.
+*(Atenção front-end: Esta rota NÃO possui a chave encapsuladora `response`. O array vem direto no root).*
+
+```json
+[
+  {
+    "uuid": "3dd0f2d7-2d1e-4d9a-a1f1-9d9f4d7c1a11",
+    "nome": "Instituto Curitiba",
+    "cnpj": "12345678000199",
+    "descricao": "Instituição voltada para atendimento e apoio social",
+    "status": "ativo",
+    "servicos": [
+      "atendimento",
+      "orientacao"
+    ],
+    "contato": {
+      "telefone": "41999990000",
+      "email": "contato@exemplo.org",
+      "instagram": "@institutoexemplo",
+      "facebook": "institutoexemplo",
+      "site": "[https://exemplo.org](https://exemplo.org)"
+    },
+    "endereco": {
+      "logradouro": "Rua das Flores",
+      "bairro": "Centro",
+      "numero": 100,
+      "cep": "80010000",
+      "cidade": "Curitiba",
+      "estado": "PR",
+      "pais": "Brasil"
+    }
+  }
+]
+```
+
+## 10. GET /instituicoes/filtro e GET /admin/instituicoes/filtro
+
+### Autenticação
+- Rota sem `/admin/`: Pública (Não exige token).
+- Rota com `/admin/`: Protegida (Exige token JWT no header).
+
+### Parâmetros de Query Obrigatórios
+O front-end deve enviar `cidade` e `servico` na URL.
+- Exemplo: `GET /instituicoes/filtro?cidade=Curitiba&servico=psicologia`
+
+### Resposta de sucesso
+Status: `200 OK`
+Retorna o Array direto de `InstituicaoRequest` correspondentes ao cruzamento da cidade com o serviço desejado.
+*(Atenção front-end: Esta rota NÃO possui a chave encapsuladora `response`. O array vem direto no root).*
+
+```json
+[
+  {
+    "uuid": "3dd0f2d7-2d1e-4d9a-a1f1-9d9f4d7c1a11",
+    "nome": "Instituto Curitiba",
+    "cnpj": "12345678000199",
+    "descricao": "Instituição voltada para atendimento e apoio social",
+    "status": "ativo",
+    "servicos": [
+      "psicologia"
+    ],
+    "contato": {
+      "telefone": "41999990000",
+      "email": "contato@exemplo.org",
+      "instagram": "@institutoexemplo",
+      "facebook": "institutoexemplo",
+      "site": "[https://exemplo.org](https://exemplo.org)"
+    },
+    "endereco": {
+      "logradouro": "Rua das Flores",
+      "bairro": "Centro",
+      "numero": 100,
+      "cep": "80010000",
+      "cidade": "Curitiba",
+      "estado": "PR",
+      "pais": "Brasil"
+    }
+  }
+]
+```
 
 ### Respostas de erro observadas no código
 
@@ -467,9 +565,11 @@ Exemplo:
 
 - Enviar `Authorization: Bearer <token>` em todas as rotas de instituição.
 - Tratar `POST /auth/login` como a origem do token JWT.
+- Nas rotas sem o prefixo `/admin/`, as instituições inativas ou pendentes serão silenciosamente omitidas dos resultados.
 - No cadastro de instituição, enviar todos os campos obrigatórios da estrutura aninhada de contato e endereço.
 - Na atualização de instituição, considerar que o backend aceita atualização parcial, desde que `uuid` seja enviado.
 - Para consulta pública por UUID, ler a instituição dentro da chave `response`.
 - Para busca pública por nome, ler a lista de instituições dentro da chave `response`; a busca retorna nomes que começam com o valor informado e não diferencia maiúsculas/minúsculas.
 - O campo `status` deve respeitar os valores `ativo`, `inativo` ou `pendente`.
 - O payload de `endereco.numero` chega como número no JSON, embora o model interno use `bigint`.
+- Padrão de Retorno: As rotas que buscam por parâmetros de URL (`/uuid/:uuid` e `/nome/:nome`) retornam os dados encapsulados em `{ "response": dados }`. Já as rotas gerais (`/instituicoes`, `/cidade/:cidade` e  as de filtragem) retornam a coleção JSON ([ ... ]) diretamente no root da resposta.
