@@ -4,6 +4,7 @@ import { Instituicao } from "../models/instituicao.model.js";
 import type { IInstituicaoRepository } from "../repositories/iinstituicao.repositories.js";
 import type { IInstituicaoService } from "./iinstituicao.services.js";
 import { UuidProvider } from "../utils/uuid-provider.utils.js";
+import { cnpj as cnpjValidator } from "cpf-cnpj-validator";
 
 export class InstituicaoService implements IInstituicaoService {
 
@@ -11,13 +12,25 @@ export class InstituicaoService implements IInstituicaoService {
         public repository: IInstituicaoRepository
     ){ }
 
+    private validaCnpj(cnpj : string ): string{
+        if (cnpj !== undefined && cnpj !== null && cnpj.trim() !== "") {
+                if (!cnpjValidator.isValid(cnpj)) {
+                    throw new Error(`Não é possível criar Instituicao: CNPJ inválido (${cnpj})`);
+                }
+                // Salva no banco apenas os números
+                return cnpjValidator.strip(cnpj);
+            } else {
+                throw new Error(`Não é possível criar Instituicao: CNPJ inválido (${cnpj})`);
+            }
+    }
+
     async cadastrarInstituicao(cadastrarRequest: InstituicaoCreateRequest): Promise<InstituicaoRequest> {
         const instituicao = new Instituicao(
             cadastrarRequest.nome,
             cadastrarRequest.servicos,
             cadastrarRequest.contato as any,
             cadastrarRequest.endereco as any,
-            cadastrarRequest.cnpj,
+            this.validaCnpj(cadastrarRequest.cnpj),
             cadastrarRequest.descricao,
             cadastrarRequest.status,
             undefined,
@@ -63,7 +76,11 @@ export class InstituicaoService implements IInstituicaoService {
         instituicaoOriginal.servicos = updateRequest.servicos ?? instituicaoOriginal.servicos;
         instituicaoOriginal.contato = updateRequest.contato ?? instituicaoOriginal.contato;
         instituicaoOriginal.endereco = updateRequest.endereco ?? instituicaoOriginal.endereco;
-        instituicaoOriginal.cnpj = updateRequest.cnpj ?? instituicaoOriginal.cnpj;
+
+        // só valida o cpf se tiver algo nele, senão usa o que já estava no banco mesmo.
+        if( !(!updateRequest.cnpj || updateRequest.cnpj == "")) {
+            instituicaoOriginal.cnpj = this.validaCnpj(updateRequest.cnpj) ?? instituicaoOriginal.cnpj;
+        }
 
 
         const atualizou = await this.repository.update(instituicaoOriginal);
