@@ -15,6 +15,15 @@ export class AdminSeed extends BaseSeed {
     async run(dataSource: DataSource): Promise<void> {
         console.log(">> Seed de Administradores iniciada.")
 
+        // usa o repository nativo do TypeORM que tem o método count
+        const totalAdmins = await dataSource.getRepository(Admin).count();
+
+        // se ja tiver dados, interrompe o seeding
+        if (totalAdmins > 0) {
+            console.log("  >> Seed ignorado: A tabela 'admin' já possui dados.");
+            return;
+        }
+
         // Limpa os registros antigos antes de semear
         await this.adminRepository.limparTabela();
 

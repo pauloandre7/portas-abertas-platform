@@ -16,7 +16,16 @@ export class InstituicaoSeeder implements BaseSeed{
     }
 
     async run(dataSource: DataSource): Promise<void> {
-        
+        console.log(">> Seed de Instituições iniciada.")
+
+        // verifica a quantidade de instituições cadastradas
+        const totalInstituicoes = await dataSource.getRepository(Instituicao).count();
+
+        if (totalInstituicoes > 0) {
+            console.log("  >> Seed ignorado: A tabela 'instituicao' já possui dados.");
+            return;
+        }
+
         this.repository.limparTabela();
         
         const endereco: Endereco = new Endereco(

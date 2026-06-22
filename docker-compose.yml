@@ -26,6 +26,25 @@ services:
     depends_on:
       - postgres
 
-# declara o volume persistente para poder usar dentro do container postgres
+  # container "api" para rodar o backend
+  api:
+    build: . # Diz ao Docker para usar o Dockerfile na mesma pasta
+    container_name: portas_abertas_api
+    restart: always
+    ports:
+      - "${PORT}:${PORT}" # Mapeia a porta do .env para sua máquina
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - JWT_SECRET=${JWT_SECRET}
+      - PORT=${PORT}
+      - BCRYPT_SALT_ROUNDS=${BCRYPT_SALT_ROUNDS}
+      - DB_HOST=portas_abertas_db
+      - DB_PORT=5432 # Dentro da rede do Docker, a porta do banco é a original (5432)
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+    depends_on:
+      - postgres # Só vai iniciar o container da api depois do postgres
+
 volumes:
   postgres_data:
