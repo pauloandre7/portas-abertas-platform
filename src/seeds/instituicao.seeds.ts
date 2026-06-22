@@ -40,12 +40,12 @@ export class InstituicaoSeeder implements BaseSeed{
             Status.ATIVO, undefined, UuidProvider.gerarUuid()
         );
         const instituicao2: Instituicao = new Instituicao(
-            "Psi. Luanna", ["Terapia", "Avaliação Clínica"],
+            "Psi. Luanna", ["Terapia", "Avaliação Clínica", "Informação"],
             contato, endereco, "12345678000195", "Descrição Descritiva",
             Status.ATIVO, undefined, UuidProvider.gerarUuid()
         );
         const instituicao3: Instituicao = new Instituicao(
-            "Psi. Isabella", ["Terapia", "Avaliação Clínica", "Suporte de Desenvolvimento"],
+            "Psi. Isabella", ["Terapia", "Avaliação Clínica", "Suporte de Desenvolvimento", "Informação"],
             contato, endereco2, "98765432000198", "Descrição Descritiva", 
             Status.PENDENTE, undefined, UuidProvider.gerarUuid()
         );

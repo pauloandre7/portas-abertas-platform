@@ -1,7 +1,8 @@
-import { ILike, Repository } from "typeorm";
+import { ArrayContains, ArrayOverlap, ILike, Repository } from "typeorm";
 import { Instituicao } from "../models/instituicao.model.js";
 import type { IInstituicaoRepository } from "./iinstituicao.repositories.js"
 import { AppDataSource } from "../config/database.js";
+import { threadCpuUsage } from "node:process";
 
 export class InstituicaoRepository implements IInstituicaoRepository {
     
@@ -99,22 +100,16 @@ export class InstituicaoRepository implements IInstituicaoRepository {
             throw new Error("Não foram informados os serviços para filtragem");
         }
 
-        let instituicoes : Instituicao[] = [];
+        // O TypeORM monta uma Query que busca todos que tiverem os elementos do array
+        const instituicoes = await this.repository.findBy({
+            servicos: ArrayContains(servicos)
+        });
 
-        // pega cada item de "servicos" e guarda em "servico", que será usado no método find
-        for ( const servico of servicos){
-            instituicoes = instituicoes.concat(
-                await this.repository.findBy({
-                    servicos: servico
-                })
-            );
-        }
-
-        if(instituicoes.length){
+        if(instituicoes.length > 0){
             
             return instituicoes;
         } else {
-            throw new Error("");
+            throw new Error("Nenhuma instituição foi encontrada.");
         }
     }
 

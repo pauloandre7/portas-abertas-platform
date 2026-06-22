@@ -106,8 +106,44 @@ export class InstituicaoHandler {
         }
     }
 
+    public listar(req: any, res: any) {
+        if (req.query.servico) {
+            // Se tem filtro "servico", vai para o método de busca por serviço
+            return this.listarPorServico(req, res);
+        }
+
+        return this.listarTodas(req, res);
+    }
+
     public listarTodas(req: any, res: any) {
         this.service.listarTodasInstituicoes()
+            .then(response => {
+
+                res.status(200).json(response);
+
+            }).catch(error => {
+
+                res.status(400).json({
+                    error: error.message
+                });
+
+            });
+    }
+
+    public listarPorServico(req: any, res: any) {
+        let servicosQuery = req.query.servico;
+        let arrayDeServicos: string[] = [];
+
+        // quando a URL tem múltiplos '?servico=', o Express já converte para Array nativamente.
+        if (Array.isArray(servicosQuery)) {
+
+            arrayDeServicos = servicosQuery as string[];
+        } else if (typeof servicosQuery === 'string') {
+            // entra nesse se tiver apenas uma string na query. Envelopa ela em um array de um elemento só
+            arrayDeServicos = [servicosQuery];
+        }
+
+        this.service.listarPorServicos(arrayDeServicos)
             .then(response => {
 
                 res.status(200).json(response);
@@ -137,27 +173,7 @@ export class InstituicaoHandler {
             });
     }
 
-    public listarPorServico(req: any, res: any) {
-        const { servico } = req.params;
-
-        this.service.listarPorServicos([servico])
-            .then(response => {
-
-                res.status(200).json(response);
-
-            }).catch(error => {
-
-                res.status(400).json({
-                    error: error.message
-                });
-
-            });
-    }
-
-    public listarPorCidadeEServico(
-        req: any,
-        res: any
-    ) {
+    public listarPorCidadeEServico( req: any, res: any ) {
 
         const { cidade, servico } = req.query;
 
