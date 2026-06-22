@@ -1,6 +1,6 @@
 import { Endereco } from './endereco.model.js';
 import { Contato } from './contato.models.js';
-import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { Status, type StatusInstituicao } from './instituicao-status-enum.models.js';
 
 @Entity()

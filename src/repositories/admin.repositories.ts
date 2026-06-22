@@ -2,7 +2,6 @@ import { Repository } from "typeorm";
 import { AppDataSource } from "../config/database.js";
 import { Admin } from "../models/admin.models.js";
 import type{ IAdminRepository } from "./iadmin.repositories.js";
-import type { promises } from "node:dns";
 
 export class AdminRepository implements IAdminRepository{
     
