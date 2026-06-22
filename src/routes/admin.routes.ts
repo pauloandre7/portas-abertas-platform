@@ -22,19 +22,19 @@ export class AdminRoutes {
         );
 
         this.router.put(
-            '/:uuid',
+            '/uuid/:uuid',
             authMiddleware,
             (req, res) => this.handler.atualizar(req, res)
         );
 
         this.router.get(
-            '/:uuid',
+            '/uuid/:uuid',
             authMiddleware,
             (req, res) => this.handler.buscarPorUuid(req, res)
         );
 
         this.router.delete(
-            '/:uuid',
+            '/uuid/:uuid',
             authMiddleware,
             (req, res) => this.handler.deletar(req, res)
         );
