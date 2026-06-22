@@ -20,6 +20,18 @@ export class AdminRoutes {
             authMiddleware,
             (req, res) => this.handler.cadastrar(req, res)
         );
+
+        this.router.delete(
+            '/:uuid',
+            authMiddleware,
+            (req, res) => this.handler.deletar(req, res)
+        );
+        
+        this.router.get('/',
+            authMiddleware, 
+            (req, res) => this.handler.listarTodos(req, res)
+        );
+        
     }
 
 }
