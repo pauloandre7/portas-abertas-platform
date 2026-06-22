@@ -16,7 +16,7 @@ export class Instituicao {
     @Column({type: "varchar"})
     public nome?: string;
 
-    @Column({type: "text", array: true})
+    @Column({type: "varchar", array: true})
     public servicos?: string[];
 
     @Column({type: "varchar", nullable: true})
