@@ -1,4 +1,3 @@
-import { response } from "express";
 import { InstituicaoRequest } from "../dtos/instituicao-request.dtos.js";
 import type { IInstituicaoService } from "../services/iinstituicao.services.js";
 import { InstituicaoCreateRequest } from "../dtos/instituicao-create-request.dtos.js";
@@ -66,7 +65,7 @@ export class InstituicaoHandler {
         });
     }
 
-    public instituicaoPorUuid(req: any, res: any) {
+    public instituicaoPorUuid(req: any, res: any, rotaPublica: boolean) {
         const { uuid } = req.params;
 
         if(!uuid){
@@ -75,7 +74,7 @@ export class InstituicaoHandler {
             })
         } else {
 
-            this.service.buscaPorUuid(uuid)
+            this.service.buscaPorUuid(rotaPublica, uuid)
             .then( (response : InstituicaoRequest) => {
                 res.status(200).json({response})
             }).catch( error => {
@@ -86,7 +85,7 @@ export class InstituicaoHandler {
         }
     }
 
-    public instituicaoPorNome(req: any, res: any){
+    public instituicaoPorNome(req: any, res: any, rotaPublica: boolean){
         
         const { nome } = req.params;
 
@@ -95,7 +94,7 @@ export class InstituicaoHandler {
                 error: "É necessário informar o nome pelo path."
             })
         } else {
-            this.service.buscarPorNome(nome)
+            this.service.buscarPorNome(rotaPublica, nome)
             .then( (response : InstituicaoRequest[]) => {
                 res.status(200).json({response})
             }).catch( error => {
@@ -106,17 +105,17 @@ export class InstituicaoHandler {
         }
     }
 
-    public listar(req: any, res: any) {
+    public listar(req: any, res: any, rotaPublica: boolean) {
         if (req.query.servico) {
             // Se tem filtro "servico", vai para o método de busca por serviço
-            return this.listarPorServico(req, res);
+            return this.listarPorServico(req, res, rotaPublica);
         }
 
-        return this.listarTodas(req, res);
+        return this.listarTodas(req, res, rotaPublica);
     }
 
-    public listarTodas(req: any, res: any) {
-        this.service.listarTodasInstituicoes()
+    public listarTodas(req: any, res: any, rotaPublica: boolean) {
+        this.service.listarTodasInstituicoes(rotaPublica)
             .then(response => {
 
                 res.status(200).json(response);
@@ -130,7 +129,7 @@ export class InstituicaoHandler {
             });
     }
 
-    public listarPorServico(req: any, res: any) {
+    public listarPorServico(req: any, res: any, rotaPublica: boolean) {
         let servicosQuery = req.query.servico;
         let arrayDeServicos: string[] = [];
 
@@ -143,7 +142,7 @@ export class InstituicaoHandler {
             arrayDeServicos = [servicosQuery];
         }
 
-        this.service.listarPorServicos(arrayDeServicos)
+        this.service.listarPorServicos(rotaPublica, arrayDeServicos)
             .then(response => {
 
                 res.status(200).json(response);
@@ -157,9 +156,9 @@ export class InstituicaoHandler {
             });
     }
 
-    public listarPorCidade(req: any, res: any) {
+    public listarPorCidade(req: any, res: any, rotaPublica: boolean) {
         const { cidade } = req.params;
-        this.service.listarPorLocalizacao(cidade)
+        this.service.listarPorLocalizacao(rotaPublica, cidade)
             .then(response => {
 
                 res.status(200).json(response);
@@ -173,12 +172,13 @@ export class InstituicaoHandler {
             });
     }
 
-    public listarPorCidadeEServico( req: any, res: any ) {
+    public listarPorCidadeEServico( req: any, res: any, rotaPublica: boolean ) {
 
         const { cidade, servico } = req.query;
 
         this.service
             .listarPorCidadeEServico(
+                rotaPublica,
                 String(cidade),
                 String(servico)
             )

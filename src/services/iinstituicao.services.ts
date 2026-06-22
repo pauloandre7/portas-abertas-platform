@@ -7,10 +7,10 @@ export interface IInstituicaoService {
     // Dá pra usar esse modificar para trocar status também
     modificarInstituicao(updateRequest: InstituicaoRequest): Promise<InstituicaoRequest>;
     excluirInstituicao(uuid: string): Promise<boolean>;
-    listarTodasInstituicoes(): Promise<InstituicaoRequest[]>;
-    listarPorServicos(servicos: string[]) : Promise<InstituicaoRequest[]>;
-    listarPorLocalizacao(cidade: string): Promise<InstituicaoRequest[]>;
-    buscarPorNome(nome: string): Promise<InstituicaoRequest[]>;
-    buscaPorUuid(uuid: string) : Promise<InstituicaoRequest>;
-    listarPorCidadeEServico(cidade: string, servico: string): Promise<InstituicaoRequest[]>;
+    listarTodasInstituicoes(apenasAtivos: boolean): Promise<InstituicaoRequest[]>;
+    listarPorServicos(apenasAtivos: boolean, servicos: string[]) : Promise<InstituicaoRequest[]>;
+    listarPorLocalizacao(apenasAtivos: boolean, cidade: string): Promise<InstituicaoRequest[]>;
+    buscarPorNome(apenasAtivos: boolean, nome: string): Promise<InstituicaoRequest[]>;
+    buscaPorUuid(apenasAtivos: boolean, uuid: string) : Promise<InstituicaoRequest>;
+    listarPorCidadeEServico(apenasAtivos: boolean, cidade: string, servico: string): Promise<InstituicaoRequest[]>;
 }
