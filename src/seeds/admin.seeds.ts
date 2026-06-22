@@ -37,7 +37,7 @@ export class AdminSeed extends BaseSeed {
 
         const adminMaster = new Admin(
             "Admin",
-            "53361427003",
+            "04281554645",
             "admin@portas.com",
             senha1Hash,
             undefined,
@@ -47,7 +47,7 @@ export class AdminSeed extends BaseSeed {
 
         const adminSuporte = new Admin(
             "Paulo",
-            "44390632007",
+            "26208784620",
             "suporte@sistema.com",
             senha2Hash,
             undefined,
@@ -57,7 +57,7 @@ export class AdminSeed extends BaseSeed {
 
         const adminAnalista = new Admin(
             "Luana",
-            "06864197022",
+            "15607725812",
             "analista@sistema.com",
             senha3Hash,
             undefined,
