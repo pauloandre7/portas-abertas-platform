@@ -105,7 +105,19 @@ export class AdminService implements IAdminService {
     }
 
     async buscarPorUuid(uuid: string): Promise<AdminRequest> {
-        throw new Error("Esse método será implementado em outra atualização");
+        const administrador = await this.repository.findByUuid(uuid);
+
+        if (!administrador) {
+            throw new Error("Administrador não encontrado.");
+        }
+
+        return new AdminRequest(
+            administrador.uuid!,
+            administrador.nome!,
+            administrador.cpf!,
+            administrador.email!,
+            administrador.endereco! as any
+        );
     }
 
     async listarPorNome(nome: string): Promise<AdminRequest[]> {

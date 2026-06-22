@@ -27,6 +27,12 @@ export class AdminRoutes {
             (req, res) => this.handler.atualizar(req, res)
         );
 
+        this.router.get(
+            '/:uuid',
+            authMiddleware,
+            (req, res) => this.handler.buscarPorUuid(req, res)
+        );
+
         this.router.delete(
             '/:uuid',
             authMiddleware,
