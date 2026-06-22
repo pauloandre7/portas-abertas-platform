@@ -5,6 +5,7 @@ import { AdminRequest } from "../dtos/admin-request.dtos.js";
 import { Admin } from "../models/admin.models.js";
 import { UuidProvider } from "../utils/uuid-provider.utils.js";
 import type { AdminCreateRequest } from "../dtos/admin-create.dtos.js";
+import { cpf as cpfValidator } from "cpf-cnpj-validator";
 
 export class AdminService implements IAdminService {
 
@@ -12,15 +13,31 @@ export class AdminService implements IAdminService {
         private readonly repository: IAdminRepository
     ) {}
 
+    private validaCpf(cpf : string) : string{
+        // realiza validação de cpf no service ao invés da model, pois o framework 
+        // parece estar bagunçando o construtor.
+        if (cpf !== undefined && cpf !== null && cpf.trim() !== "") {
+            if (!cpfValidator.isValid(cpf)) {
+                throw new Error(`Não é possível cadastrar Admin: CPF inválido (${cpf})`);
+            }
+            
+            // retorna o cpf de apenas numeros
+            return cpfValidator.strip(cpf);
+        } else {
+            throw new Error(`Não é possível cadastrar Admin: CPF inválido (${cpf})`);
+        }
+    }
+
     async create(cadastrarRequest: AdminCreateRequest): Promise<AdminRequest> {
         
+
         const saltRounds = Number(process.env.BCRYPT_SALT_ROUNDS || 10);
 
         const senhaHash = await bcrypt.hash(cadastrarRequest.senha, saltRounds); 
 
         const admin = new Admin(
             cadastrarRequest.nome,
-            cadastrarRequest.cpf,
+            this.validaCpf(cadastrarRequest.cpf),
             cadastrarRequest.email,
             senhaHash,
             undefined, // id undefined para o banco de dados autogerar via incremento
@@ -85,9 +102,13 @@ export class AdminService implements IAdminService {
         }
 
         adminOriginal.nome = updateRequest.nome ?? adminOriginal.nome;
-        adminOriginal.cpf = updateRequest.cpf ?? adminOriginal.cpf;
         adminOriginal.email = updateRequest.email ?? adminOriginal.email;
         adminOriginal.endereco = updateRequest.endereco ?? adminOriginal.endereco;
+        
+        // só valida o cpf se tiver algo nele, senão usa o que já estava no banco mesmo.
+        if( !(!updateRequest.cpf || updateRequest.cpf == "")) {
+            adminOriginal.cpf = this.validaCpf(updateRequest.cpf);
+        }
 
         const atualizou = await this.repository.update(adminOriginal);
 
