@@ -90,14 +90,14 @@ export class InstituicaoService implements IInstituicaoService {
         }
 
         if(instituicaoOriginal.uuid == undefined){
-            throw new Error("Falha ao salvar as alterações da Instituição.");
+            throw new Error("Falha ao encontrar instituicao na base de dados.");
         }
 
         return new InstituicaoRequest(
             instituicaoOriginal.uuid, 
             instituicaoOriginal.nome,
-            instituicaoOriginal.cnpj, 
-            instituicaoOriginal.descricao,
+            instituicaoOriginal.cnpj!, 
+            instituicaoOriginal.descricao!,
             instituicaoOriginal.status, 
             instituicaoOriginal.servicos,
             instituicaoOriginal.contato, 
