@@ -30,10 +30,10 @@ export class AdminRepository implements IAdminRepository{
 
     }
 
-    async delete(admin : Admin): Promise<boolean> {
+    async delete(uuid : string): Promise<boolean> {
         
         try{
-            await this.repository.delete({id: admin.id});
+            await this.repository.delete({uuid: uuid});
             return true;
         } catch (error) {
             throw new Error("Não foi possível excluir o admin: "+ error);
@@ -51,9 +51,9 @@ export class AdminRepository implements IAdminRepository{
         }
     }
 
-    async findById(id: bigint): Promise<Admin | null> {
+    async findByUuid(uuid: string): Promise<Admin | null> {
         
-        return await this.repository.findOneBy({id: id});
+        return await this.repository.findOneBy({uuid: uuid});
     }
 
     async findAll(): Promise<Admin[]> {
