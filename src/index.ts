@@ -15,6 +15,9 @@ import { InstituicaoService } from "./services/instituicao.services.js";
 import { InstituicaoRepository } from "./repositories/instituicao.repositories.js";
 import { InstituicaoHandler } from "./handlers/instituicao.handlers.js";
 import { InstituicaoRoutes } from "./routes/instituicao.routes.js";
+import { AdminService } from "./services/admin.services.js";
+import { AdminHandler } from "./handlers/admin.handlers.js";
+import { AdminRoutes } from "./routes/admin.routes.js";
 
 async function startServer() {
     try {
@@ -33,17 +36,22 @@ async function startServer() {
         const instituicaoRepository = new InstituicaoRepository();
         const authService           = new AuthService(adminRepository, tokenProvider);
         const instituicaoService    = new InstituicaoService(instituicaoRepository);
+        const adminService          = new AdminService(adminRepository);
         const instituicaoHandler    = new InstituicaoHandler(instituicaoService);
+        const adminHandler          = new AdminHandler(adminService);
         const authHandler           = new AuthHandler(authService);
         
         // inicializa as rotas injetando os handlers no framework
         const authRouter            = express.Router();
         const instituicaoRouter     = express.Router();
+        const adminRouter           = express.Router();
 
         new AuthRoutes(authRouter, authHandler);
         app.use('/auth', authRouter);
+        new AdminRoutes(adminRouter, adminHandler);
+        app.use('/admin', adminRouter);
         new InstituicaoRoutes(instituicaoRouter, instituicaoHandler);
-        app.use('/', instituicaoRouter); // endpoint principal pro roteador de instituicao
+        app.use('/', instituicaoRouter); // endpoint principal pro roteador de instituicao        
 
         // Endpoint pra ver se está no ar
         app.get('/respirando', (_req, res) => {

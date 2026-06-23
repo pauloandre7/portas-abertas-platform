@@ -2,6 +2,7 @@ import { LoginResponse } from "../dtos/login-response.dtos.js";
 import type { IAdminRepository } from "../repositories/iadmin.repositories.js";
 import type { IAuthService } from "./iauth.services.js";
 import type { ITokenProvider } from "../utils/itoken-provider.utils.js";
+import bcrypt from "bcrypt";
 
 export class AuthService implements IAuthService {
 
@@ -18,13 +19,12 @@ export class AuthService implements IAuthService {
         const usuario =
             await this.adminRepository.findByEmail(email);
 
-        if (!usuario || usuario.nome == undefined || usuario.cpf == undefined || usuario?.email == undefined) {
+        if (!usuario || usuario.nome == undefined || usuario.cpf == undefined 
+            || usuario?.email == undefined || usuario.senhaHash == undefined) {
             throw new Error("Usuário não encontrado");
         }
         
-        // Todo: Essa verificação aqui não vai funcionar. Do front vem string, do banco vem hash...
-        // Tem que usar alguma lib para esse hash aqui.
-        if (usuario.senhaHash !== senha) {
+        if (!bcrypt.compare(senha, usuario.senhaHash)) {
             throw new Error("Senha inválida");
         }
 
