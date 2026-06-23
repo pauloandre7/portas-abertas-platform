@@ -2,25 +2,25 @@ import { Column } from "typeorm";
 
 export class Endereco { 
 
-    @Column({type: "varchar"})
+    @Column({type: "varchar", nullable: true})
     public logradouro: string;
 
-    @Column({type: "varchar"})
+    @Column({type: "varchar", nullable: true})
     public bairro: string;
 
-    @Column({type: "int"})
+    @Column({type: "int", nullable: true})
     public numero: bigint;
 
-    @Column({type: "varchar"})
+    @Column({type: "varchar", nullable: true})
     public cep: string;
 
-    @Column({type: "varchar"})
+    @Column({type: "varchar", nullable: true})
     public cidade: string;
 
-    @Column({type: "varchar", length: 2})
+    @Column({type: "varchar", length: 2, nullable: true})
     public estado: string;
 
-    @Column({type: "varchar"})
+    @Column({type: "varchar", nullable: true})
     public pais: string;
 
     constructor(

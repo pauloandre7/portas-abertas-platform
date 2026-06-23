@@ -29,10 +29,9 @@ export const authMiddleware: RequestHandler = (req, res, next) => {
 
     // decodificação de fato do token
     try {
+        const secret = process.env.JWT_SECRET || "portas-abertas-secret";
         
-        const secret = process.env.JWT_SECRET;
-        
-        if(token == undefined || secret == undefined) throw new Error ("Erro ao validar token");
+        if (!token) throw new Error("Erro ao validar token");
         
         // O verify dispara um erro automaticamente se o token for falso ou se estiver expirado
         // Decodificamos e forçamos a tipagem do que esperamos que tenha lá dentro

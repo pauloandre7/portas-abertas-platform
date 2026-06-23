@@ -1,5 +1,6 @@
 import "reflect-metadata"
 import express from 'express';
+import cors from 'cors';
 import { AuthHandler } from './handlers/auth.handlers.js';
 import { AuthRoutes } from './routes/auth.routes.js';
 import { AuthService } from './services/auth.services.js';
@@ -15,6 +16,9 @@ import { InstituicaoService } from "./services/instituicao.services.js";
 import { InstituicaoRepository } from "./repositories/instituicao.repositories.js";
 import { InstituicaoHandler } from "./handlers/instituicao.handlers.js";
 import { InstituicaoRoutes } from "./routes/instituicao.routes.js";
+import { AdminService } from "./services/admin.services.js";
+import { AdminHandler } from "./handlers/admin.handlers.js";
+import { AdminRoutes } from "./routes/admin.routes.js";
 
 async function startServer() {
     try {
@@ -24,6 +28,7 @@ async function startServer() {
 
         // Inicializa a estrutura do Express
         const app = express();
+        app.use(cors({ origin: '*', allowedHeaders: ['Content-Type', 'Authorization'] }));
         app.use(express.json());
 
         
@@ -36,14 +41,22 @@ async function startServer() {
         const instituicaoHandler    = new InstituicaoHandler(instituicaoService);
         const authHandler           = new AuthHandler(authService);
         
+        const adminService          = new AdminService(adminRepository);
+        const adminHandler          = new AdminHandler(adminService);
+
         // inicializa as rotas injetando os handlers no framework
         const authRouter            = express.Router();
         const instituicaoRouter     = express.Router();
+        const adminRouter           = express.Router();
 
         new AuthRoutes(authRouter, authHandler);
         app.use('/auth', authRouter);
+        
         new InstituicaoRoutes(instituicaoRouter, instituicaoHandler);
         app.use('/', instituicaoRouter); // endpoint principal pro roteador de instituicao
+
+        new AdminRoutes(adminRouter, adminHandler);
+        app.use('/', adminRouter);
 
         // Endpoint pra ver se está no ar
         app.get('/respirando', (_req, res) => {

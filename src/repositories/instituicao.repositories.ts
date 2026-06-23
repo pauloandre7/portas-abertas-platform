@@ -2,7 +2,6 @@ import { ArrayContains, ArrayOverlap, ILike, Repository } from "typeorm";
 import { Instituicao } from "../models/instituicao.model.js";
 import type { IInstituicaoRepository } from "./iinstituicao.repositories.js"
 import { AppDataSource } from "../config/database.js";
-import { threadCpuUsage } from "node:process";
 
 export class InstituicaoRepository implements IInstituicaoRepository {
     

@@ -35,8 +35,8 @@ export class Pessoa {
         uuid?: string,
         endereco?: Endereco
     ){ 
-        if(nome && cpf && email && senhaHash){
-            if (!this.validaCpf(cpf)) throw new Error("Não é possível criar Pessoa: CPF inválido");
+        if(nome !== undefined && cpf !== undefined && email !== undefined && senhaHash !== undefined){
+            // if (!this.validaCpf(cpf)) throw new Error("Não é possível criar Pessoa: CPF inválido");
             if (!email.includes("@")) throw new Error("Não é possível criar Pessoa: Email inválido");
             if (senhaHash.trim().length === 0) throw new Error("Não é possível criar Pessoa: Senha vazia");
             

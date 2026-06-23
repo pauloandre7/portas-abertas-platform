@@ -49,10 +49,28 @@ export class InstituicaoSeeder implements BaseSeed{
             contato, endereco2, "98765432000198", "Descrição Descritiva", 
             Status.PENDENTE, undefined, UuidProvider.gerarUuid()
         );
+        const instituicao4: Instituicao = new Instituicao(
+            "Fonoaudiologia ABC", ["Fonoaudiologia", "Avaliação Diagnóstica"],
+            contato, endereco, "11111111000111", "Clínica especializada em fonoaudiologia infantil",
+            Status.INATIVO, undefined, UuidProvider.gerarUuid()
+        );
+        const instituicao5: Instituicao = new Instituicao(
+            "Terapia Ocupacional XYZ", ["Terapia Ocupacional", "Inclusão Escolar"],
+            contato, endereco2, "22222222000122", "Centro de apoio à inclusão",
+            Status.INATIVO, undefined, UuidProvider.gerarUuid()
+        );
+        const instituicao6: Instituicao = new Instituicao(
+            "Centro TDAH Caminhos", ["Terapia", "Psicopedagogia"],
+            contato, endereco, "33333333000133", "Apoio a crianças com TDAH",
+            Status.PENDENTE, undefined, UuidProvider.gerarUuid()
+        );
 
         if(await this.repository.create(instituicao)) console.log("\n>> Instituição 1 criada com sucesso.");
         if(await this.repository.create(instituicao2)) console.log("\n>> Instituição 2 criada com sucesso.");
         if(await this.repository.create(instituicao3)) console.log("\n>> Instituição 3 criada com sucesso.");
+        if(await this.repository.create(instituicao4)) console.log("\n>> Instituição 4 criada com sucesso.");
+        if(await this.repository.create(instituicao5)) console.log("\n>> Instituição 5 criada com sucesso.");
+        if(await this.repository.create(instituicao6)) console.log("\n>> Instituição 6 criada com sucesso.");
 
         console.log("Seed de instituições finalizada com sucesso!");
 
