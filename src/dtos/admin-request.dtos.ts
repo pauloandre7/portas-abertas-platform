@@ -6,6 +6,8 @@ export class AdminRequest {
         public nome: string,
         public cpf: string,
         public email: string,
+        public status: string,
+        public role: string,
         public endereco: EnderecoDto
     ) {}
 }
