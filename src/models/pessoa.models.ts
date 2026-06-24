@@ -21,6 +21,12 @@ export class Pessoa {
     @Column({ type: "varchar"})
     public senhaHash?: string;
 
+    @Column({ type: "varchar", length: 50, default: "ativo" })
+    public status?: string;
+
+    @Column({ type: "varchar", length: 50, default: "Editor" })
+    public role?: string;
+
     // Essa expressão abaixo faz essa Entity aqui criar colunas usando o mapeamento de colunas da CLasse Endereco.
     // então a classe Pessoa faria colunas do tipo: EnderecoNumero, EndereroPais, etc...
     @Column(() => Endereco)
@@ -33,6 +39,8 @@ export class Pessoa {
         senhaHash?: string,
         id?: bigint,
         uuid?: string,
+        status?: string,
+        role?: string,
         endereco?: Endereco
     ){ 
         if(nome && cpf && email && senhaHash){
@@ -46,6 +54,8 @@ export class Pessoa {
             
             this.id =  id;
             this.uuid =  uuid;
+            this.status = status;
+            this.role = role;
             this.endereco =  endereco;
         }
 

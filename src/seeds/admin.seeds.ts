@@ -51,6 +51,7 @@ export class AdminSeed extends BaseSeed {
             senha1Hash,
             undefined,
             UuidProvider.gerarUuid(),
+            "ativo", "Editor",
             enderecoPadrao
         );
 
@@ -61,6 +62,7 @@ export class AdminSeed extends BaseSeed {
             senha2Hash,
             undefined,
             UuidProvider.gerarUuid(),
+            "ativo", "Editor",
             enderecoPadrao
         );
 
@@ -71,6 +73,7 @@ export class AdminSeed extends BaseSeed {
             senha3Hash,
             undefined,
             UuidProvider.gerarUuid(),
+            "ativo", "Editor",
             enderecoPadrao
         );
         

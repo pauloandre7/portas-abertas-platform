@@ -38,7 +38,8 @@ export class AuthService implements IAuthService {
             usuario.cpf,
             usuario.email,
             token,
-            usuario.id !== undefined ? usuario.id.toString() : undefined,
+            usuario.status!,
+            usuario.role!,
             usuario.uuid,
             usuario.endereco
         );
