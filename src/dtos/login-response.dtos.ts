@@ -7,7 +7,8 @@ export class LoginResponse {
         public cpf: string,
         public email: string,
         public token: string,
-        public id?: string,
+        public status: string,
+        public role: string,
         public uuid?: string,
         public endereco?: Endereco
     ){
