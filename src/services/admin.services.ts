@@ -56,6 +56,8 @@ export class AdminService implements IAdminService {
             admin.nome!,
             admin.cpf!,
             admin.email!,
+            admin.status!,
+            admin.role!,
             admin.endereco! as any
         );
     }
@@ -85,6 +87,8 @@ export class AdminService implements IAdminService {
                 admin.nome!,
                 admin.cpf!,
                 admin.email!,
+                admin.status!,
+                admin.role!,
                 admin.endereco! as any
             );
         });
@@ -121,6 +125,8 @@ export class AdminService implements IAdminService {
             adminOriginal.nome!,
             adminOriginal.cpf!,
             adminOriginal.email!,
+            adminOriginal.status!,
+            adminOriginal.role!,
             adminOriginal.endereco! as any
         );
     }
@@ -137,6 +143,8 @@ export class AdminService implements IAdminService {
             administrador.nome!,
             administrador.cpf!,
             administrador.email!,
+            administrador.status!,
+            administrador.role!,
             administrador.endereco! as any
         );
     }
