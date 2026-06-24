@@ -1,16 +1,13 @@
 import "reflect-metadata"
 import express from 'express';
+import cors from 'cors'
 import { AuthHandler } from './handlers/auth.handlers.js';
 import { AuthRoutes } from './routes/auth.routes.js';
 import { AuthService } from './services/auth.services.js';
-import type { IAdminRepository } from './repositories/iadmin.repositories.js';
 import { JwtTokenProvider } from './utils/jwt-token-provider.js';
-import { Admin } from './models/admin.models.js';
 
 import { AppDataSource } from "./config/database.js";
 import { AdminRepository } from "./repositories/admin.repositories.js";
-import { BaseSeed } from "./seeds/iseedBase.seeds.js";
-import { AdminSeed } from "./seeds/admin.seeds.js";
 import { InstituicaoService } from "./services/instituicao.services.js";
 import { InstituicaoRepository } from "./repositories/instituicao.repositories.js";
 import { InstituicaoHandler } from "./handlers/instituicao.handlers.js";
@@ -18,6 +15,7 @@ import { InstituicaoRoutes } from "./routes/instituicao.routes.js";
 import { AdminService } from "./services/admin.services.js";
 import { AdminHandler } from "./handlers/admin.handlers.js";
 import { AdminRoutes } from "./routes/admin.routes.js";
+
 
 async function startServer() {
     try {
@@ -27,6 +25,7 @@ async function startServer() {
 
         // Inicializa a estrutura do Express
         const app = express();
+        app.use(cors({ origin: '*', allowedHeaders: ['Content-Type', 'Authorization'] }));
         app.use(express.json());
 
         
